@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Internal User Representation
@@ -25,17 +26,29 @@ public class User implements Serializable {
   @GeneratedValue
   private Long id;
 
-  @Column(nullable = false)
-  private String name;
+  @Column(nullable = false, unique = true)
+  private String email;
 
   @Column(nullable = false, unique = true)
   private String username;
 
+  @Column(nullable = false)
+  private String password;
+
+  @Column(nullable = false)
+  private String repeatPassword;
+
   @Column(nullable = false, unique = true)
   private String token;
 
-  @Column(nullable = false)
-  private UserStatus status;
+  private int score;
+  private int communityranking;
+  private int globalranking;
+  public User() {
+    this.score = 0;
+    this.globalranking = 0;
+    this.communityranking = 0;
+  }
 
   public Long getId() {
     return id;
@@ -45,12 +58,12 @@ public class User implements Serializable {
     this.id = id;
   }
 
-  public String getName() {
-    return name;
+  public String getEmail() {
+    return email;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setEmail(String email) {
+    this.email = email;
   }
 
   public String getUsername() {
@@ -61,6 +74,22 @@ public class User implements Serializable {
     this.username = username;
   }
 
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public String getRepeatPassword() {
+    return repeatPassword;
+  }
+
+  public void setRepeatPassword(String repeatPassword) {
+    this.repeatPassword = repeatPassword;
+  }
+
   public String getToken() {
     return token;
   }
@@ -69,11 +98,27 @@ public class User implements Serializable {
     this.token = token;
   }
 
-  public UserStatus getStatus() {
-    return status;
+  public int getScore() {
+    return score;
   }
 
-  public void setStatus(UserStatus status) {
-    this.status = status;
+  public void setScore(int score) {
+    this.score = score;
+  }
+
+  public int getCommunityranking() {
+    return communityranking;
+  }
+
+  public void setCommunityranking(int communityranking) {
+    this.communityranking = communityranking;
+  }
+
+  public int getGlobalranking() {
+    return globalranking;
+  }
+
+  public void setGlobalranking(int globalranking) {
+    this.globalranking = globalranking;
   }
 }
