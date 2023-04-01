@@ -3,12 +3,13 @@ package ch.uzh.ifi.hase.soprafs23.rest.mapper;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPutDTO;
 import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-03-31T17:08:35+0200",
-    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.6 (Private Build)"
+    date = "2023-04-01T22:00:06+0200",
+    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.6 (Eclipse Adoptium)"
 )
 public class DTOMapperImpl implements DTOMapper {
 
@@ -21,13 +22,9 @@ public class DTOMapperImpl implements DTOMapper {
         User user = new User();
 
         user.setPassword( userPostDTO.getPassword() );
-        user.setRepeatPassword( userPostDTO.getRepeatPassword() );
         user.setEmail( userPostDTO.getEmail() );
         user.setUsername( userPostDTO.getUsername() );
         user.setId( userPostDTO.getId() );
-        user.setScore( userPostDTO.getScore() );
-        user.setCommunityranking( userPostDTO.getCommunityranking() );
-        user.setGlobalranking( userPostDTO.getGlobalranking() );
 
         return user;
     }
@@ -40,15 +37,30 @@ public class DTOMapperImpl implements DTOMapper {
 
         UserGetDTO userGetDTO = new UserGetDTO();
 
-        userGetDTO.setPassword( user.getPassword() );
-        userGetDTO.setRepeatPassword( user.getRepeatPassword() );
+        userGetDTO.setGlobalRanking( user.getGlobalRanking() );
+        userGetDTO.setScore( user.getScore() );
+        userGetDTO.setCommunityRanking( user.getCommunityRanking() );
+        userGetDTO.setId( user.getId() );
         userGetDTO.setEmail( user.getEmail() );
         userGetDTO.setUsername( user.getUsername() );
-        userGetDTO.setId( user.getId() );
-        userGetDTO.setScore( user.getScore() );
-        userGetDTO.setCommunityranking( user.getCommunityranking() );
-        userGetDTO.setGlobalranking( user.getGlobalranking() );
+        userGetDTO.setToken( user.getToken() );
 
         return userGetDTO;
+    }
+
+    @Override
+    public User convertUserPutDTOtoEntity(UserPutDTO userPutDTO) {
+        if ( userPutDTO == null ) {
+            return null;
+        }
+
+        User user = new User();
+
+        user.setPassword( userPutDTO.getPassword() );
+        user.setEmail( userPutDTO.getEmail() );
+        user.setUsername( userPutDTO.getUsername() );
+        user.setId( userPutDTO.getId() );
+
+        return user;
     }
 }

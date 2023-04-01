@@ -1,18 +1,17 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
 import ch.uzh.ifi.hase.soprafs23.entity.User;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.ResDto;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * User Controller
@@ -45,52 +44,34 @@ public class UserController {
     return userGetDTOs;   //print userGetDTO objects in the page
   }
 
-  @GetMapping("/user/{username}")
+  @GetMapping("/users/{id}")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
-  public UserGetDTO getSingleUsername(@PathVariable String username) {
-    User singleUsername = userService.getSingleUsername(username);
-    return DTOMapper.INSTANCE.convertEntityToUserGetDTO(singleUsername);
+  public UserGetDTO getUser(@PathVariable("id") long id) {
+    User user = userService.getUserById(id);
+    if(user==null){
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find user!");
+    }
+    return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
   }
 
-  @GetMapping("/score/{username}")
-  @ResponseStatus(HttpStatus.OK)
+  @PutMapping("/users/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
   @ResponseBody
-  public int getUserScore(@PathVariable String username) {
-    User singleUsername = userService.getSingleUsername(username);
-    return singleUsername.getScore();
-  }
-
-  @GetMapping("/communityranking/{username}")
-  @ResponseStatus(HttpStatus.OK)
-  @ResponseBody
-  public int getUserCommunityRanking(@PathVariable String username) {
-    User singleUsername = userService.getSingleUsername(username);
-    return singleUsername.getCommunityranking();
-  }
-
-  @GetMapping("/globalranking/{username}")
-  @ResponseStatus(HttpStatus.OK)
-  @ResponseBody
-  public int getUserGlobalRanking(@PathVariable String username) {
-    User singleUsername = userService.getSingleUsername(username);
-    return singleUsername.getGlobalranking();
-  }
-
-  @PostMapping("/logout/{username}")
-  @ResponseStatus(HttpStatus.OK)
-  @ResponseBody
-  public Object userLogout(@PathVariable String username) {
-    return "ok";
+  public void updateUser(@PathVariable("id") long id, @RequestBody UserPutDTO userPutDTO) {
+    User userToBeUpdated = userService.getUserById(id);
+    User updateUserInfo = DTOMapper.INSTANCE.convertUserPutDTOtoEntity(userPutDTO);
+    if(userToBeUpdated == null){
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find user!");
+    }
+    userService.update(userToBeUpdated, updateUserInfo);
   }
 
   @PostMapping("/users")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
-  public UserGetDTO createUser(@RequestBody UserPostDTO userPostDTO) throws ParseException {
+  public UserGetDTO createUser(@RequestBody UserPostDTO userPostDTO) {
     // convert API user to internal representation
-    String username = userPostDTO.getUsername();
-    UserGetDTO singleUsername = this.getSingleUsername(username);
     User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
     // create user
     User createdUser = userService.createUser(userInput);
@@ -98,35 +79,11 @@ public class UserController {
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
   }
 
-
-  @PostMapping("/user")
-  @ResponseStatus(HttpStatus.OK)
-  @ResponseBody
-  public ResDto updateUser(@RequestBody UserPostDTO userPostDTO) throws ParseException {
-    Long id = userPostDTO.getId();
-    User userById = this.userService.getUserById(id);
-    if(userById == null){
-      return ResDto.err("User ID does not exist");
-    }
-    UserGetDTO singleUsername = this.getSingleUsername(userPostDTO.getUsername());
-    if(!Objects.isNull(singleUsername) && !Objects.equals(singleUsername.getId(), userPostDTO.getId())){
-      return ResDto.err("User name already exists");
-    }
-    userById.setUsername(userPostDTO.getUsername());
-    this.userService.updateUser(userById);
-
-    return ResDto.ok();
-  }
-
   @PostMapping("/login")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
   public UserGetDTO login(@RequestBody UserPostDTO userPostDTO) {
-    String username = userPostDTO.getUsername();
-    User singleUsername = this.userService.getSingleUsername(username);
-    if(singleUsername == null || !Objects.equals(singleUsername.getPassword(), userPostDTO.getPassword())){
-      return null;
-    }
-    return DTOMapper.INSTANCE.convertEntityToUserGetDTO(singleUsername);
+    User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+    return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.UserLogin(userInput));
   }
 }

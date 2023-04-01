@@ -1,25 +1,14 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
-import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
-
-import java.util.Date;
-
 public class UserGetDTO {
 
   private Long id;
   private String email;
   private String username;
-  private String password;
-  private String repeatPassword;
   private int score;
-  private int communityranking;
-  private int globalranking;
-
-  public UserGetDTO() {
-    this.score = 0;
-    this.communityranking = 0;
-    this.globalranking = 0;
-  }
+  private int globalRanking;
+  private int communityRanking;
+  private String token;
 
   public Long getId() {
     return id;
@@ -45,22 +34,6 @@ public class UserGetDTO {
     this.username = username;
   }
 
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  public String getRepeatPassword() {
-    return repeatPassword;
-  }
-
-  public void setRepeatPassword(String repeatPassword) {
-    this.repeatPassword = repeatPassword;
-  }
-
   public int getScore() {
     return score;
   }
@@ -69,19 +42,27 @@ public class UserGetDTO {
     this.score = score;
   }
 
-  public int getCommunityranking() {
-    return communityranking;
+  public int getGlobalRanking() {
+    return globalRanking;
   }
 
-  public void setCommunityranking(int communityranking) {
-    this.communityranking = communityranking;
+  public void setGlobalRanking(int globalRanking) {
+    this.globalRanking = globalRanking;
   }
 
-  public int getGlobalranking() {
-    return globalranking;
+  public int getCommunityRanking() {
+    return communityRanking;
   }
 
-  public void setGlobalranking(int globalranking) {
-    this.globalranking = globalranking;
+  public void setCommunityRanking(int communityRanking) {
+    this.communityRanking = communityRanking;
+  }
+
+  public String getToken() {
+    return token;
+  }
+
+  public void setToken(String token) {
+    this.token = token;
   }
 }

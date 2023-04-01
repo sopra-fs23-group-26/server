@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
-import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
 import org.slf4j.Logger;
@@ -12,10 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * User Service
@@ -41,59 +40,92 @@ public class UserService {
     return this.userRepository.findAll();
   }
 
-  public User getSingleUsername(String username){
-      return this.userRepository.findByUsername(username);
-  }
-
-  public User getUserById(long id){
-      Optional<User> byId = this.userRepository.findById(id);
-      if(byId.isPresent()){
-          return byId.get();
-      }
-      return null;
-  }
-
-
   public User createUser(User newUser){
     newUser.setToken(UUID.randomUUID().toString());
+    newUser.setCommunityRanking(1);
+    newUser.setScore(0);
+    newUser.setGlobalRanking(1);
     checkIfUserExists(newUser);
+    checkEmptyString(newUser.getPassword(),"password");
+    checkEmptyString(newUser.getUsername(),"username");
+    checkEmailValid(newUser);
     newUser = userRepository.save(newUser);
     userRepository.flush();
     log.debug("Created Information for User: {}", newUser);
     return newUser;
   }
 
-  public User updateUser(User user){
-      return this.userRepository.saveAndFlush(user);
+  private void checkEmailValid(User userToBeCreated) {
+    String email = userToBeCreated.getEmail();
+
+    String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+
+    // compile the pattern into a regex object
+    Pattern pattern = Pattern.compile(regex);
+
+    // use the regex object to match against the email string
+    Matcher matcher = pattern.matcher(email);
+
+    if(!matcher.matches()){
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The email address is in the wrong format.");
+    }
+
   }
 
+  private void checkEmptyString(String string, String message) {
+    if(string.trim().isEmpty()){
+      throw new ResponseStatusException(HttpStatus.CONFLICT, message + " cannot be empty space.");
+    }
+  }
+
+  public User UserLogin(User newUser){
+    checkIfPasswordCorrects(newUser);
+    return userRepository.findByUsername(newUser.getUsername());
+  }
+
+  private void checkIfPasswordCorrects(User userToBeChecked){
+    User userByUsername = userRepository.findByUsername(userToBeChecked.getUsername());
+    if(userByUsername==null)
+    {throw new ResponseStatusException(HttpStatus.CONFLICT, "Unregistered User!");}
+    else if(!userByUsername.getPassword().equals(userToBeChecked.getPassword())){
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Wrong Password!");
+    }
+  }
   private void checkIfUserExists(User userToBeCreated) {
     User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
+    User userByEmail = userRepository.findByEmail(userToBeCreated.getEmail());
 
     if (userByUsername != null) {
       throw new ResponseStatusException(HttpStatus.CONFLICT,
           "The username provided is not unique. Therefore, the user could not be created!");
-    } else if (isEmail(userToBeCreated.getEmail()) == false){
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-          "Error: please input a valid email");
-    } else if ((userToBeCreated.getPassword()).compareTo(userToBeCreated.getRepeatPassword()) != 0) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-              "The repeat password is not equal to the password, input again!");
+    } else if (userByEmail != null ){
+      throw new ResponseStatusException(HttpStatus.CONFLICT,
+          "The email provided is not unique. Therefore, the user could not be created!\"");
     }
   }
 
-  private boolean isEmail(String email) {
-    int pos1 = email.indexOf("@");
-    if (pos1 == -1) {
-      return false;
-    } else {
-      String sub_email = email.substring(pos1 + 1);
-      int pos2 = sub_email.indexOf(".");
-      if ( pos2 == -1)
-        return false;
-      else
-        return true;
-    }
+
+  public User getUserById(long id) {
+    return userRepository.findById(id);
   }
 
+  public void update(User userToBeUpdated, User updateUserInfo) {
+    if(updateUserInfo.getUsername() != null){
+       String updateUsername = updateUserInfo.getUsername();
+       checkEmptyString(updateUsername, "username");
+       checkIfUserExists(updateUserInfo);
+       userToBeUpdated.setUsername(updateUserInfo.getUsername());
+     }
+    if(updateUserInfo.getEmail() != null){
+      String UpdateEmail = updateUserInfo.getEmail();
+      checkIfUserExists(updateUserInfo);
+      checkEmailValid(updateUserInfo);
+      userToBeUpdated.setEmail(UpdateEmail);
+
+    }
+    if(updateUserInfo.getPassword() != null){
+      String updatePassword = updateUserInfo.getPassword();
+      checkEmptyString(updatePassword,"password");
+    }
+  }
 }

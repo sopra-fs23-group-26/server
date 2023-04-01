@@ -1,8 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
-
-public class UserPostDTO {
-
+public class UserPutDTO {
     private Long id;
     private String email;
     private String username;
@@ -40,5 +38,4 @@ public class UserPostDTO {
     public void setPassword(String password) {
         this.password = password;
     }
-
 }

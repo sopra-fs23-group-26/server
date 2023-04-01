@@ -1,10 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
-import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * Internal User Representation
@@ -35,20 +32,17 @@ public class User implements Serializable {
   @Column(nullable = false)
   private String password;
 
-  @Column(nullable = false)
-  private String repeatPassword;
-
   @Column(nullable = false, unique = true)
   private String token;
 
+  @Column(nullable = false)
   private int score;
-  private int communityranking;
-  private int globalranking;
-  public User() {
-    this.score = 0;
-    this.globalranking = 0;
-    this.communityranking = 0;
-  }
+
+  @Column(nullable = false)
+  private int globalRanking;
+
+  @Column(nullable = false)
+  private int communityRanking;
 
   public Long getId() {
     return id;
@@ -82,14 +76,6 @@ public class User implements Serializable {
     this.password = password;
   }
 
-  public String getRepeatPassword() {
-    return repeatPassword;
-  }
-
-  public void setRepeatPassword(String repeatPassword) {
-    this.repeatPassword = repeatPassword;
-  }
-
   public String getToken() {
     return token;
   }
@@ -106,19 +92,19 @@ public class User implements Serializable {
     this.score = score;
   }
 
-  public int getCommunityranking() {
-    return communityranking;
+  public int getGlobalRanking() {
+    return globalRanking;
   }
 
-  public void setCommunityranking(int communityranking) {
-    this.communityranking = communityranking;
+  public void setGlobalRanking(int globalRanking) {
+    this.globalRanking = globalRanking;
   }
 
-  public int getGlobalranking() {
-    return globalranking;
+  public int getCommunityRanking() {
+    return communityRanking;
   }
 
-  public void setGlobalranking(int globalranking) {
-    this.globalranking = globalranking;
+  public void setCommunityRanking(int communityRanking) {
+    this.communityRanking = communityRanking;
   }
 }
