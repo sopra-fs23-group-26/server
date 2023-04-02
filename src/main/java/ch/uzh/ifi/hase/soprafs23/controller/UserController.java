@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +24,6 @@ import java.util.List;
  */
 @RestController
 public class UserController {
-
   private final UserService userService;
 
   UserController(UserService userService) {
@@ -70,7 +71,7 @@ public class UserController {
   @PostMapping("/users")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
-  public UserGetDTO createUser(@RequestBody UserPostDTO userPostDTO) {
+  public UserGetDTO createUser(@RequestBody UserPostDTO userPostDTO) throws IOException, SQLException {
     // convert API user to internal representation
     User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
     // create user

@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Blob;
 
 /**
  * Internal User Representation
@@ -23,6 +24,10 @@ public class User implements Serializable {
   @GeneratedValue
   private Long id;
 
+  @Lob
+  @Column(nullable = true)
+  private Blob image;
+
   @Column(nullable = false, unique = true)
   private String email;
 
@@ -43,6 +48,14 @@ public class User implements Serializable {
 
   @Column(nullable = false)
   private int communityRanking;
+
+  public Blob getImage() {
+    return image;
+  }
+
+  public void setImage(Blob image) {
+    this.image = image;
+  }
 
   public Long getId() {
     return id;

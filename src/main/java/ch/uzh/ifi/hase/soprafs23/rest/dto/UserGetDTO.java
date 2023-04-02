@@ -1,5 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
+import java.sql.Blob;
+
 public class UserGetDTO {
 
   private Long id;
@@ -9,6 +11,15 @@ public class UserGetDTO {
   private int globalRanking;
   private int communityRanking;
   private String token;
+  private String image;
+  public String getImage() {
+    return image;
+  }
+
+  public void setImage(String image) {
+    this.image = image;
+  }
+
 
   public Long getId() {
     return id;
