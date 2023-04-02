@@ -29,7 +29,7 @@ public class User implements Serializable {
   @Column()
   private Blob image;
 
-  @Column(nullable = false, unique = true)
+  @Column(unique = true)
   private String email;
 
   @Column(nullable = false, unique = true)

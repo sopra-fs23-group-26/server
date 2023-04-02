@@ -3,5 +3,7 @@
 - username: String
 - userId: long
 - password: String
-- email: String
+- (TODO: Delete) email: String
 - score: int
+- globalRanking: int
+- communityRanking: int
