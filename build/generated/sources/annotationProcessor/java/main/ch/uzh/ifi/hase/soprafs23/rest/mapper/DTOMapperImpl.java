@@ -4,11 +4,12 @@ import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPutDTO;
+import java.sql.SQLException;
 import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-04-01T22:00:06+0200",
+    date = "2023-04-02T19:56:55+0200",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.6 (Eclipse Adoptium)"
 )
 public class DTOMapperImpl implements DTOMapper {
@@ -21,6 +22,12 @@ public class DTOMapperImpl implements DTOMapper {
 
         User user = new User();
 
+        try {
+            user.setImage( mapToBlob( userPostDTO.getImage() ) );
+        }
+        catch ( SQLException e ) {
+            throw new RuntimeException( e );
+        }
         user.setPassword( userPostDTO.getPassword() );
         user.setEmail( userPostDTO.getEmail() );
         user.setUsername( userPostDTO.getUsername() );
@@ -39,6 +46,12 @@ public class DTOMapperImpl implements DTOMapper {
 
         userGetDTO.setGlobalRanking( user.getGlobalRanking() );
         userGetDTO.setScore( user.getScore() );
+        try {
+            userGetDTO.setImage( mapToString( user.getImage() ) );
+        }
+        catch ( SQLException e ) {
+            throw new RuntimeException( e );
+        }
         userGetDTO.setCommunityRanking( user.getCommunityRanking() );
         userGetDTO.setId( user.getId() );
         userGetDTO.setEmail( user.getEmail() );

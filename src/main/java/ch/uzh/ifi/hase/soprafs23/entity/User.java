@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs23.entity;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Blob;
+import java.util.List;
 
 /**
  * Internal User Representation
@@ -25,7 +26,7 @@ public class User implements Serializable {
   private Long id;
 
   @Lob
-  @Column(nullable = true)
+  @Column()
   private Blob image;
 
   @Column(nullable = false, unique = true)
@@ -48,6 +49,20 @@ public class User implements Serializable {
 
   @Column(nullable = false)
   private int communityRanking;
+
+  @ManyToMany
+  @JoinTable(name = "friends",
+          joinColumns = @JoinColumn(name = "user_id"),
+          inverseJoinColumns = @JoinColumn(name = "friend_id"))
+  private List<User> friends;
+
+  public List<User> getFriends() {
+    return friends;
+  }
+
+  public void setFriends(List<User> friends) {
+    this.friends = friends;
+  }
 
   public Blob getImage() {
     return image;

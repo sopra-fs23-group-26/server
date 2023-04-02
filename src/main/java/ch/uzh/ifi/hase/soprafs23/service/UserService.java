@@ -135,5 +135,26 @@ public class UserService {
       String updatePassword = updateUserInfo.getPassword();
       checkEmptyString(updatePassword,"password");
     }
+    userRepository.save(userToBeUpdated);
+  }
+
+  public User getUserByUsername(String username) {
+    return userRepository.findByUsername(username);
+  }
+
+  public void addFriend(User user, String username) {
+
+    User friend = userRepository.findByUsername(username);
+
+    if(friend == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find your friend's username!");
+    }
+
+
+    user.getFriends().add(friend);
+    friend.getFriends().add(user);
+
+    userRepository.save(user);
+    userRepository.save(friend);
   }
 }

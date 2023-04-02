@@ -87,4 +87,29 @@ public class UserController {
     User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.UserLogin(userInput));
   }
+
+  @GetMapping("/users/{userId}/friends")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public List<User> getFriends(@PathVariable long userId) {
+    User user = userService.getUserById(userId);
+    if(user == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find user!");
+    }
+    return user.getFriends();
+  }
+
+  @PutMapping("/users/{userId}/friends")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void addFriend(@PathVariable("userId") long userId, @RequestBody String username) {
+    User user = userService.getUserById(userId);
+    if(user == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find user!");
+    }
+
+    userService.addFriend(user, username);
+  }
+
+
+
 }
