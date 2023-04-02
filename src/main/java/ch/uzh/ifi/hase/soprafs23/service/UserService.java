@@ -56,7 +56,7 @@ public class UserService {
     checkIfUserExists(newUser);
     checkEmptyString(newUser.getPassword(),"password");
     checkEmptyString(newUser.getUsername(),"username");
-    checkEmailValid(newUser);
+    //checkEmailValid(newUser);
     newUser = userRepository.save(newUser);
     userRepository.flush();
     log.debug("Created Information for User: {}", newUser);
