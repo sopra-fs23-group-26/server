@@ -27,7 +27,6 @@ public interface DTOMapper {
 
   DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
 
-  @Mapping(source = "email", target = "email")
   @Mapping(source = "username", target = "username")
   @Mapping(source = "password", target = "password")
   @Mapping(source = "image", target = "image", qualifiedByName = "mapToBlob")
@@ -46,7 +45,7 @@ public interface DTOMapper {
   }
 
 
-  @Mapping(source = "email", target = "email")
+
   @Mapping(source = "username", target = "username")
   @Mapping(source = "globalRanking", target = "globalRanking")
   @Mapping(source = "communityRanking", target = "communityRanking")
@@ -62,7 +61,7 @@ public interface DTOMapper {
       return bytes.toString();
   }
 
-  @Mapping(source = "email", target = "email")
+
   @Mapping(source = "username", target = "username")
   @Mapping(source = "password", target = "password")
   User convertUserPutDTOtoEntity(UserPutDTO userPutDTO);

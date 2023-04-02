@@ -9,7 +9,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-04-02T19:56:55+0200",
+    date = "2023-04-02T22:44:05+0200",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.6 (Eclipse Adoptium)"
 )
 public class DTOMapperImpl implements DTOMapper {
@@ -29,7 +29,6 @@ public class DTOMapperImpl implements DTOMapper {
             throw new RuntimeException( e );
         }
         user.setPassword( userPostDTO.getPassword() );
-        user.setEmail( userPostDTO.getEmail() );
         user.setUsername( userPostDTO.getUsername() );
         user.setId( userPostDTO.getId() );
 
@@ -54,7 +53,6 @@ public class DTOMapperImpl implements DTOMapper {
         }
         userGetDTO.setCommunityRanking( user.getCommunityRanking() );
         userGetDTO.setId( user.getId() );
-        userGetDTO.setEmail( user.getEmail() );
         userGetDTO.setUsername( user.getUsername() );
         userGetDTO.setToken( user.getToken() );
 
@@ -70,7 +68,6 @@ public class DTOMapperImpl implements DTOMapper {
         User user = new User();
 
         user.setPassword( userPutDTO.getPassword() );
-        user.setEmail( userPutDTO.getEmail() );
         user.setUsername( userPutDTO.getUsername() );
         user.setId( userPutDTO.getId() );
 

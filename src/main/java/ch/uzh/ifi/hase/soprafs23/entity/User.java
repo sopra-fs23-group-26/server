@@ -29,9 +29,6 @@ public class User implements Serializable {
   @Column()
   private Blob image;
 
-  @Column(unique = true)
-  private String email;
-
   @Column(nullable = false, unique = true)
   private String username;
 
@@ -78,14 +75,6 @@ public class User implements Serializable {
 
   public void setId(Long id) {
     this.id = id;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
   }
 
   public String getUsername() {

@@ -5,7 +5,6 @@ import java.sql.Blob;
 public class UserGetDTO {
 
   private Long id;
-  private String email;
   private String username;
   private int score;
   private int globalRanking;
@@ -27,14 +26,6 @@ public class UserGetDTO {
 
   public void setId(Long id) {
     this.id = id;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
   }
 
   public String getUsername() {

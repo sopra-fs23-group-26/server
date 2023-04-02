@@ -18,8 +18,6 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * User Service
@@ -56,28 +54,10 @@ public class UserService {
     checkIfUserExists(newUser);
     checkEmptyString(newUser.getPassword(),"password");
     checkEmptyString(newUser.getUsername(),"username");
-    //checkEmailValid(newUser);
     newUser = userRepository.save(newUser);
     userRepository.flush();
     log.debug("Created Information for User: {}", newUser);
     return newUser;
-  }
-
-  private void checkEmailValid(User userToBeCreated) {
-    String email = userToBeCreated.getEmail();
-
-    String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-
-    // compile the pattern into a regex object
-    Pattern pattern = Pattern.compile(regex);
-
-    // use the regex object to match against the email string
-    Matcher matcher = pattern.matcher(email);
-
-    if(!matcher.matches()){
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The email address is in the wrong format.");
-    }
-
   }
 
   private void checkEmptyString(String string, String message) {
@@ -101,14 +81,10 @@ public class UserService {
   }
   private void checkIfUserExists(User userToBeCreated) {
     User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
-    User userByEmail = userRepository.findByEmail(userToBeCreated.getEmail());
 
     if (userByUsername != null) {
       throw new ResponseStatusException(HttpStatus.CONFLICT,
           "The username provided is not unique. Therefore, the user could not be created!");
-    } else if (userByEmail != null ){
-      throw new ResponseStatusException(HttpStatus.CONFLICT,
-          "The email provided is not unique. Therefore, the user could not be created!\"");
     }
   }
 
@@ -124,13 +100,6 @@ public class UserService {
        checkIfUserExists(updateUserInfo);
        userToBeUpdated.setUsername(updateUserInfo.getUsername());
      }
-    if(updateUserInfo.getEmail() != null){
-      String UpdateEmail = updateUserInfo.getEmail();
-      checkIfUserExists(updateUserInfo);
-      checkEmailValid(updateUserInfo);
-      userToBeUpdated.setEmail(UpdateEmail);
-
-    }
     if(updateUserInfo.getPassword() != null){
       String updatePassword = updateUserInfo.getPassword();
       checkEmptyString(updatePassword,"password");
@@ -149,7 +118,6 @@ public class UserService {
     if(friend == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find your friend's username!");
     }
-
 
     user.getFriends().add(friend);
     friend.getFriends().add(user);

@@ -2,7 +2,6 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 public class UserPutDTO {
     private Long id;
-    private String email;
     private String username;
     private String password;
 
@@ -13,14 +12,6 @@ public class UserPutDTO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getUsername() {
