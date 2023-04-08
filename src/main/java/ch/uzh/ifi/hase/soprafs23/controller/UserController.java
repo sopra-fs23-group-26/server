@@ -95,7 +95,7 @@ public class UserController {
     }
     if (image != null) {
       String fileName = StringUtils.cleanPath(image.getOriginalFilename());
-      String uploadDir = "user-photos/" + updateUserInfo.getId();
+      String uploadDir = "user-photos/" + id;
       File uploadDirPath = new File(uploadDir);
       if (!uploadDirPath.exists()) {
         uploadDirPath.mkdirs();
