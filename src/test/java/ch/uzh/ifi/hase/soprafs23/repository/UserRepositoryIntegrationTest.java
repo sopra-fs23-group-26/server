@@ -32,7 +32,6 @@ public class UserRepositoryIntegrationTest {
         user.setPassword("1111");
         user.setToken("1");
         InputStream inputStream = getClass().getResourceAsStream("/default.png");
-        user.setImage(Base64.getEncoder().encodeToString(inputStream.readAllBytes()));
         entityManager.persist(user);
         entityManager.flush();
 
