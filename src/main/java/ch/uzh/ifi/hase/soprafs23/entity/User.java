@@ -25,9 +25,8 @@ public class User implements Serializable {
   @GeneratedValue
   private Long id;
 
-  @Lob
-  @Column()
-  private Blob image;
+  @Column
+  private String image;
 
   @Column(nullable = false, unique = true)
   private String username;
@@ -61,11 +60,11 @@ public class User implements Serializable {
     this.friends = friends;
   }
 
-  public Blob getImage() {
+  public String getImage() {
     return image;
   }
 
-  public void setImage(Blob image) {
+  public void setImage(String image) {
     this.image = image;
   }
 

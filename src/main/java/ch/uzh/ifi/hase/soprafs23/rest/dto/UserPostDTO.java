@@ -1,17 +1,19 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class UserPostDTO {
 
     private Long id;
     private String username;
     private String password;
-    private String image;
-    public String getImage() {
+    private MultipartFile image;
+    public MultipartFile getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(MultipartFile image) {
         this.image = image;
     }
 

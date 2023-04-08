@@ -6,11 +6,25 @@ import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.UserService;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import org.springframework.core.io.Resource;
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,18 +69,71 @@ public class UserController {
     }
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
   }
+//
+//  @PutMapping("/users/{id}")
+//  @ResponseStatus(HttpStatus.NO_CONTENT)
+//  @ResponseBody
+//  public void updateUser(@PathVariable("id") long id, @RequestBody UserPutDTO userPutDTO) {
+//    User userToBeUpdated = userService.getUserById(id);
+//    User updateUserInfo = DTOMapper.INSTANCE.convertUserPutDTOtoEntity(userPutDTO);
+//    if(userToBeUpdated == null){
+//      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find user!");
+//    }
+//    userService.update(userToBeUpdated, updateUserInfo);
+//  }
 
   @PutMapping("/users/{id}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
   @ResponseBody
-  public void updateUser(@PathVariable("id") long id, @RequestBody UserPutDTO userPutDTO) {
+  public void updateUser(@PathVariable Long id, @RequestParam(required = false) String username, @RequestParam(required = false) MultipartFile image) throws IOException {
     User userToBeUpdated = userService.getUserById(id);
-    User updateUserInfo = DTOMapper.INSTANCE.convertUserPutDTOtoEntity(userPutDTO);
+    User updateUserInfo = new User();
     if(userToBeUpdated == null){
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find user!");
     }
-    userService.update(userToBeUpdated, updateUserInfo);
+    if (username != null) {
+      updateUserInfo.setUsername(username);
+    }
+    if (image != null) {
+      String fileName = StringUtils.cleanPath(image.getOriginalFilename());
+      String uploadDir = "user-photos/" + updateUserInfo.getId();
+      File uploadDirPath = new File(uploadDir);
+      if (!uploadDirPath.exists()) {
+        uploadDirPath.mkdirs();
+      }
+      Path path = Paths.get(uploadDir + "/" + fileName);
+      Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+      updateUserInfo.setImage(fileName);
+    }
+    userService.update(userToBeUpdated,updateUserInfo);
   }
+
+  @GetMapping("/users/{id}/image")
+  @ResponseBody
+  public ResponseEntity<Resource> getUserProfileImage(@PathVariable Long id) {
+    User user = userService.getUserById(id);
+    if (user == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find user!");
+    }
+
+    String fileName = user.getImage();
+    if (fileName == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User has no profile image!");
+    }
+
+    String uploadDir = "user-photos/" + user.getId();
+    Path path = Paths.get(uploadDir + "/" + fileName);
+    Resource resource;
+    try {
+      resource = new UrlResource(path.toUri());
+    } catch (MalformedURLException e) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile image not found!");
+    }
+    return ResponseEntity.ok()
+            .contentType(MediaType.IMAGE_JPEG)
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + ((UrlResource) resource).getFilename() + "\"")
+            .body(resource);
+  }
+
 
   @PostMapping("/users")
   @ResponseStatus(HttpStatus.CREATED)
@@ -87,6 +154,7 @@ public class UserController {
     User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.UserLogin(userInput));
   }
+
 
   @GetMapping("/users/{userId}/friends")
   @ResponseStatus(HttpStatus.OK)

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.imageio.ImageIO;
@@ -16,7 +18,9 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.io.*;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -48,13 +52,10 @@ public class UserService {
     newUser.setCommunityRanking(1);
     newUser.setScore(0);
     newUser.setGlobalRanking(1);
-    InputStream inputStream = getClass().getResourceAsStream("/default.png");
-    Blob blob = new javax.sql.rowset.serial.SerialBlob(inputStream.readAllBytes());
-    newUser.setImage(blob);
     checkIfUserExists(newUser);
     checkEmptyString(newUser.getPassword(),"password");
     checkEmptyString(newUser.getUsername(),"username");
-    newUser = userRepository.save(newUser);
+    newUser = (User) userRepository.save(newUser);
     userRepository.flush();
     log.debug("Created Information for User: {}", newUser);
     return newUser;
@@ -103,6 +104,10 @@ public class UserService {
     if(updateUserInfo.getPassword() != null){
       String updatePassword = updateUserInfo.getPassword();
       checkEmptyString(updatePassword,"password");
+    }
+    if(updateUserInfo.getImage() != null){
+      String updateImage = updateUserInfo.getImage();
+      userToBeUpdated.setImage(updateUserInfo.getImage());
     }
     userRepository.save(userToBeUpdated);
   }

@@ -6,8 +6,11 @@ import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPutDTO;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.rowset.serial.SerialBlob;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.Blob;
 import java.sql.SQLException;
 
@@ -29,20 +32,8 @@ public interface DTOMapper {
 
   @Mapping(source = "username", target = "username")
   @Mapping(source = "password", target = "password")
-  @Mapping(source = "image", target = "image", qualifiedByName = "mapToBlob")
+  @Mapping(target = "image", ignore = true)
   User convertUserPostDTOtoEntity(UserPostDTO userPostDTO);
-  @Named("mapToBlob")
-  public default Blob mapToBlob(String bytes) throws SQLException {
-    if (bytes == null) {
-      return null;
-    }
-    try {
-      return new SerialBlob(bytes.getBytes());
-    }
-    catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-  }
 
 
 
@@ -52,14 +43,8 @@ public interface DTOMapper {
   @Mapping(source = "score", target = "score")
   @Mapping(source = "id", target = "id")
   @Mapping(source = "token", target = "token")
-  @Mapping(source = "image", target = "image", qualifiedByName = "mapToString")
+  @Mapping(source = "image", target = "image")
   UserGetDTO convertEntityToUserGetDTO(User user);
-  @Named("mapToString")
-  public default String mapToString(Blob bytes) throws SQLException {
-    if (bytes == null) return null;
-    else
-      return bytes.toString();
-  }
 
 
   @Mapping(source = "username", target = "username")
