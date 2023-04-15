@@ -19,7 +19,6 @@ public class UserGetDTO {
     this.image = image;
   }
 
-
   public Long getId() {
     return id;
   }
