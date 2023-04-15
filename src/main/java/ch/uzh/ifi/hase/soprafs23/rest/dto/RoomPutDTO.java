@@ -1,12 +1,12 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
-import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.entity.User;
 
 import java.util.Set;
 
 public class RoomPutDTO {
     private Long id;
-    private Set<Player> players;
+    private Set<User> players;
 
     public Long getId() {
         return id;
@@ -17,11 +17,11 @@ public class RoomPutDTO {
     }
 
 
-    public Set<Player> getPlayers() {
+    public Set<User> getPlayers() {
         return players;
     }
 
-    public void setPlayers(Set<Player> players) {
+    public void setPlayers(Set<User> players) {
         this.players = players;
     }
 

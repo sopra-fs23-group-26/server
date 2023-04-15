@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.rest.mapper;
 
-import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.RoomGetDTO;
@@ -15,7 +14,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-04-15T15:12:20+0200",
+    date = "2023-04-16T00:12:27+0200",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.6 (Eclipse Adoptium)"
 )
 public class DTOMapperImpl implements DTOMapper {
@@ -80,9 +79,9 @@ public class DTOMapperImpl implements DTOMapper {
         room.setName( roomPostDTO.getName() );
         room.setId( roomPostDTO.getId() );
         room.setGameName( roomPostDTO.getGameName() );
-        Set<Player> set = roomPostDTO.getPlayers();
+        Set<User> set = roomPostDTO.getPlayers();
         if ( set != null ) {
-            room.setPlayers( new HashSet<Player>( set ) );
+            room.setPlayers( new HashSet<User>( set ) );
         }
 
         return room;
@@ -99,9 +98,9 @@ public class DTOMapperImpl implements DTOMapper {
         roomGetDTO.setName( room.getName() );
         roomGetDTO.setId( room.getId() );
         roomGetDTO.setGameName( room.getGameName() );
-        Set<Player> set = room.getPlayers();
+        Set<User> set = room.getPlayers();
         if ( set != null ) {
-            roomGetDTO.setPlayers( new HashSet<Player>( set ) );
+            roomGetDTO.setPlayers( new HashSet<User>( set ) );
         }
 
         return roomGetDTO;
@@ -115,9 +114,9 @@ public class DTOMapperImpl implements DTOMapper {
 
         Room room = new Room();
 
-        Set<Player> set = roomPutDTO.getPlayers();
+        Set<User> set = roomPutDTO.getPlayers();
         if ( set != null ) {
-            room.setPlayers( new HashSet<Player>( set ) );
+            room.setPlayers( new HashSet<User>( set ) );
         }
         room.setId( roomPutDTO.getId() );
 

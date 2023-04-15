@@ -45,11 +45,27 @@ public class User implements Serializable {
   @Column(nullable = false)
   private int communityRanking;
 
+  private String word;
+
+  private boolean undercover;
+
   @ManyToMany
   @JoinTable(name = "friends",
           joinColumns = @JoinColumn(name = "user_id"),
           inverseJoinColumns = @JoinColumn(name = "friend_id"))
   private List<User> friends;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "room_id")
+  private Room room;
+
+  public Room getRoom() {
+    return room;
+  }
+
+  public void setRoom(Room room) {
+    this.room = room;
+  }
 
   public List<User> getFriends() {
     return friends;
@@ -121,5 +137,21 @@ public class User implements Serializable {
 
   public void setCommunityRanking(int communityRanking) {
     this.communityRanking = communityRanking;
+  }
+
+  public String getWord() {
+    return word;
+  }
+
+  public void setWord(String word) {
+    this.word = word;
+  }
+
+  public boolean isUndercover() {
+    return undercover;
+  }
+
+  public void setUndercover(boolean undercover) {
+    this.undercover = undercover;
   }
 }

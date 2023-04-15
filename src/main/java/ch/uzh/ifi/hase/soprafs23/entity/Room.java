@@ -1,15 +1,12 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
-import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Set;
 import java.util.HashSet;
-
+import java.util.Set;
 
 @Entity
-@Table(name = "room")
+@Table(name = "ROOM")
 public class Room implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -21,11 +18,19 @@ public class Room implements Serializable {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Player> players = new HashSet<>();
+    @Column(nullable = false)
+    private String gameName;
 
-    @Enumerated(EnumType.STRING)
-    private GameStatus status;
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<User> players = new HashSet<>();
+
+    public Set<User> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(Set<User> players) {
+        this.players = players;
+    }
 
     public String getGameName() {
         return gameName;
@@ -34,9 +39,6 @@ public class Room implements Serializable {
     public void setGameName(String gameName) {
         this.gameName = gameName;
     }
-
-    @Column(nullable = false)
-    private String gameName;
 
     public String getName() {
         return name;
@@ -54,19 +56,4 @@ public class Room implements Serializable {
         this.id = id;
     }
 
-    public Set<Player> getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(Set<Player> players) {
-        this.players = players;
-    }
-
-    public GameStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(GameStatus status) {
-        this.status = status;
-    }
 }
