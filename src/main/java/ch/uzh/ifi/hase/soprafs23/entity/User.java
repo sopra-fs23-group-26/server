@@ -49,6 +49,8 @@ public class User implements Serializable {
 
   private boolean undercover;
 
+  private boolean isVoted;
+
   @ManyToMany
   @JoinTable(name = "friends",
           joinColumns = @JoinColumn(name = "user_id"),
@@ -153,5 +155,13 @@ public class User implements Serializable {
 
   public void setUndercover(boolean undercover) {
     this.undercover = undercover;
+  }
+
+  public boolean isVoted() {
+    return isVoted;
+  }
+
+  public void setVoted(boolean voted) {
+    isVoted = voted;
   }
 }

@@ -3,8 +3,10 @@ package ch.uzh.ifi.hase.soprafs23.controller;
 
 import ch.uzh.ifi.hase.soprafs23.entity.GameUndercover;
 import ch.uzh.ifi.hase.soprafs23.entity.Room;
+import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.service.RoomService;
 import ch.uzh.ifi.hase.soprafs23.service.UCService;
+import ch.uzh.ifi.hase.soprafs23.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +15,12 @@ public class GameUnderCoverController {
 
     private final UCService ucService;
     private final RoomService roomService;
+    private final UserService userService;
 
-    GameUnderCoverController(UCService ucService, RoomService roomService) {
+    GameUnderCoverController(UCService ucService, RoomService roomService, UserService userService) {
         this.ucService = ucService;
         this.roomService = roomService;
+        this.userService = userService;
     }
 
     /*create an undercover game by the following steps
@@ -28,10 +32,34 @@ public class GameUnderCoverController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public GameUndercover createGame(@PathVariable("roomId") long roomId) {
-
         Room room = roomService.getRoomById(roomId);
-        return ucService.createGame(room);
+        return ucService.createGame(room.getPlayers());
     }
+
+    /*
+    * when a user ends his/her description, call this put method to set currentPlayer to the next user
+    * or if all users have finished, set the game status to voting.*/
+    @PutMapping("/undercover/{gameId}/users/{userId}/description")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GameUndercover describe(@PathVariable("gameId") long gameId, @PathVariable long userId){
+        GameUndercover gameUndercover = ucService.getGameById(gameId);
+        User describedUser = userService.getUserById(userId);
+        return ucService.describe(gameUndercover, describedUser);
+    }
+
+    /*
+    * when a round of voting finished, use this put mapping
+    * to update the voting result and determine whether game ends*/
+    @PutMapping("/undercover/{gameId}/votes")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GameUndercover vote(@PathVariable("gameId") long gameId,@RequestBody User votedUser){
+        GameUndercover gameUndercover = ucService.getGameById(gameId);
+        return ucService.vote(gameUndercover, votedUser);
+    }
+
+
 
 
 }
