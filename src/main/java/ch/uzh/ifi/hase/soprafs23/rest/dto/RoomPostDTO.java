@@ -11,6 +11,8 @@ public class RoomPostDTO {
     private Set<User> players;
     private String gameName;
 
+    private Long ownerId;
+
     public Long getId() {
         return id;
     }
@@ -42,4 +44,8 @@ public class RoomPostDTO {
     public void setPlayers(Set<User> players) {
         this.players = players;
     }
+
+    public void setOwnerId(Long ownerId){ this.ownerId=ownerId;}
+
+    public Long getOwnerId(){ return ownerId;}
 }

@@ -21,6 +21,9 @@ public class Room implements Serializable {
     @Column(nullable = false)
     private String gameName;
 
+    @Column(nullable = false)
+    private Long ownerId;
+
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<User> players = new HashSet<>();
 
@@ -55,5 +58,9 @@ public class Room implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public Long getOwnerId() { return ownerId;}
+
+    public void setOwnerId(Long ownerId){ this.ownerId=ownerId;}
 
 }
