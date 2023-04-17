@@ -14,7 +14,8 @@ public class GameUndercover implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
+    @SequenceGenerator(name="undercover_seq", sequenceName = "UNDERCOVER_SEQUENCE", allocationSize = 1)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="undercover_seq")
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")

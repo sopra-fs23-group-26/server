@@ -14,7 +14,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-04-17T00:20:46+0200",
+    date = "2023-04-17T22:23:59+0200",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.6 (Eclipse Adoptium)"
 )
 public class DTOMapperImpl implements DTOMapper {
@@ -76,13 +76,14 @@ public class DTOMapperImpl implements DTOMapper {
 
         Room room = new Room();
 
-        room.setName( roomPostDTO.getName() );
-        room.setId( roomPostDTO.getId() );
         room.setGameName( roomPostDTO.getGameName() );
+        room.setOwnerId( roomPostDTO.getOwnerId() );
         Set<User> set = roomPostDTO.getPlayers();
         if ( set != null ) {
             room.setPlayers( new HashSet<User>( set ) );
         }
+        room.setName( roomPostDTO.getName() );
+        room.setId( roomPostDTO.getId() );
 
         return room;
     }
@@ -121,5 +122,25 @@ public class DTOMapperImpl implements DTOMapper {
         room.setId( roomPutDTO.getId() );
 
         return room;
+    }
+
+    @Override
+    public RoomPostDTO convertEntityToRoomPostDTO(Room room) {
+        if ( room == null ) {
+            return null;
+        }
+
+        RoomPostDTO roomPostDTO = new RoomPostDTO();
+
+        roomPostDTO.setName( room.getName() );
+        roomPostDTO.setId( room.getId() );
+        roomPostDTO.setGameName( room.getGameName() );
+        Set<User> set = room.getPlayers();
+        if ( set != null ) {
+            roomPostDTO.setPlayers( new HashSet<User>( set ) );
+        }
+        roomPostDTO.setOwnerId( room.getOwnerId() );
+
+        return roomPostDTO;
     }
 }

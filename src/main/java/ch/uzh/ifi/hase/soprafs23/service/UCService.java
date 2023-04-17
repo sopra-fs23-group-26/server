@@ -3,9 +3,10 @@ package ch.uzh.ifi.hase.soprafs23.service;
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.WordSet;
 import ch.uzh.ifi.hase.soprafs23.entity.GameUndercover;
-import ch.uzh.ifi.hase.soprafs23.entity.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.repository.UndercoverRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ import java.util.Set;
 @Service
 @Transactional
 public class UCService {
+
+    private final Logger log = LoggerFactory.getLogger(UCService.class);
 
     private final UndercoverRepository undercoverRepository;
 
@@ -57,11 +60,14 @@ public class UCService {
         }
         gameUndercover = (GameUndercover) undercoverRepository.save(gameUndercover);
         undercoverRepository.flush();
+        log.debug("Created Information for game: {}", gameUndercover);
         return gameUndercover;
     }
 
-
     public GameUndercover vote(GameUndercover gameUndercover, User votedUser) {
+        //eliminate the votedUser from alivePlayers
+
+        //check if the game ends (the undercover has been eliminated or only two)
         return null;
     }
 
@@ -74,6 +80,13 @@ public class UCService {
     * if false, set the current player to next one
     */
     public GameUndercover describe(GameUndercover gameUndercover, User finishedUser) {
+
+        //check if finished user is the last element of alivePlayers;
+
+        //if true, set the game status to voting (and set the current player to the first one who has not been eliminated)
+
+        //if false, set the current player to the next one
+
 
         return null;
     }

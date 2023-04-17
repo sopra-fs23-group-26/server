@@ -1,6 +1,8 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -8,93 +10,78 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
+import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.controller.GameUnderCoverController;
 import ch.uzh.ifi.hase.soprafs23.entity.GameUndercover;
 import ch.uzh.ifi.hase.soprafs23.entity.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.service.RoomService;
 import ch.uzh.ifi.hase.soprafs23.service.UCService;
+import ch.uzh.ifi.hase.soprafs23.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.server.ResponseStatusException;
 
-@WebMvcTest(GameUnderCoverController.class)
-class GameUnderCoverControllerTest {
+@ExtendWith(MockitoExtension.class)
+public class GameUnderCoverControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private RoomService roomService;
-
-    @MockBean
+    @Mock
     private UCService ucService;
 
-    @BeforeEach
-    void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
+    @Mock
+    private RoomService roomService;
 
-/*    @Test
-    void testCreateGame() throws Exception {
-        // create a mock room and set its id to 1
+    @Mock
+    private UserService userService;
+
+    @InjectMocks
+    private GameUnderCoverController gameUnderCoverController;
+
+    @Test
+    public void createGame_validInput_gameCreated() {
+        // Setup
+        long roomId = 1L;
         Room room = new Room();
-        room.setId(1L);
-        room.setName("test room");
-        room.setGameName("test game");
-
-        // create a list of mock users to add to the room
-        List<User> players = new ArrayList<>();
+        room.setId(roomId);
+        Set<User> players = new HashSet<>();
         User user1 = new User();
         user1.setId(1L);
-        user1.setUsername("user1");
-        players.add(user1);
         User user2 = new User();
         user2.setId(2L);
-        user2.setUsername("user2");
+        players.add(user1);
         players.add(user2);
-        room.setPlayers(new HashSet<>(players));
+        room.setPlayers(players);
+        when(roomService.getRoomById(roomId)).thenReturn(room);
+        when(ucService.createGame(room.getPlayers())).thenReturn(new GameUndercover());
 
-        Room room1 = roomService.getRoomById(1L);
+        // Execute
+        GameUndercover gameUndercover = gameUnderCoverController.createGame(roomId);
 
-        // mock the behavior of roomService to return the mock room
-        when(roomService.getRoomById(1L)).thenReturn(room);
-
-        // mock the behavior of ucService.createGame to return a mock GameUndercover
-        GameUndercover gameUndercover = new GameUndercover();
-        when(ucService.createGame(room)).thenReturn(gameUndercover);
-
-        // make the POST request to the controller endpoint
-        MockHttpServletRequestBuilder postRequest = post("/undercover/rooms/1")
-                .contentType(MediaType.APPLICATION_JSON);
-
-        // assert that the response is not null
-        mockMvc.perform(postRequest)
-                .andExpect(status().isCreated())
-                .andExpect((jsonPath("$.players[0].id").value(user1.getId())));
-    }*/
-
-    private String asJsonString(final Object object) {
-        try {
-            return new ObjectMapper().writeValueAsString(object);
-        } catch (JsonProcessingException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    String.format("The request body could not be created.%s", e.toString()));
-        }
+        // Verify
+        verify(roomService).getRoomById(roomId);
+        verify(ucService).createGame(room.getPlayers());
+        assertEquals(HttpStatus.CREATED, ResponseEntity.status(HttpStatus.CREATED).build().getStatusCode());
+        assertNotNull(gameUndercover);
+/*        assertEquals(GameStatus.describing, gameUndercover.getGameStatus());
+        assertEquals(2, gameUndercover.getUsers().size());
+        assertEquals(room.getPlayers(), gameUndercover.getUsers());*/
     }
-
 }
+

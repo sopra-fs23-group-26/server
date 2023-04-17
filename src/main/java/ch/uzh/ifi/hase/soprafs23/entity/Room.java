@@ -12,7 +12,8 @@ public class Room implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
+    @SequenceGenerator(name="room_seq", sequenceName = "ROOM_SEQUENCE", allocationSize = 1)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="room_seq")
     private Long id;
 
     @Column(unique = true, nullable = false)

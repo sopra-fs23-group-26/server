@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 class RoomServiceTest {
 
@@ -50,7 +51,21 @@ class RoomServiceTest {
 
         // when -> any object is being saved in the userRepository -> return the dummy
         // testUser
-        Mockito.when(roomRepository.save(Mockito.any())).thenReturn(testRoom);
+        when(roomRepository.save(Mockito.any())).thenReturn(testRoom);
     }
+
+    @Test
+    public void testGetRoomById() {
+        // Mock the room repository to return the mock room object when findById is called with argument 1L
+        when(roomRepository.findById(1L)).thenReturn(testRoom);
+
+        // Call the getRoomById method of the roomService
+        Room returnedRoom = roomService.getRoomById(1L);
+
+        // Assert that the returned room is the same as the mock room object
+        assert returnedRoom.equals(testRoom);
+    }
+
+
 
 }
