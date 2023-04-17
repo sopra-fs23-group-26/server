@@ -5,9 +5,12 @@ import ch.uzh.ifi.hase.soprafs23.constant.WordSet;
 import ch.uzh.ifi.hase.soprafs23.entity.GameUndercover;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.repository.UndercoverRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import java.util.*;
 
@@ -22,7 +25,13 @@ class UCServiceTest {
     @InjectMocks
     UCService ucService;
 
-/*    @Test
+    @BeforeEach
+    public void setup() {
+        MockitoAnnotations.openMocks(this);
+
+    }
+
+    @Test
     public void createGame_validInput_gameCreated() {
         // Setup
         Set<User> users = new HashSet<>();
@@ -64,7 +73,7 @@ class UCServiceTest {
         assertEquals(expectedGame.getGameStatus(), actualGame.getGameStatus());
         assertEquals(expectedGame.getUsers(), actualGame.getUsers());
         assertEquals(expectedGame.getCurrentPlayerId(), actualGame.getCurrentPlayerId());
-    }*/
+    }
 
 
 

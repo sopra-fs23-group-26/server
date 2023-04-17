@@ -33,7 +33,8 @@ public class GameUnderCoverController {
     @ResponseBody
     public GameUndercover createGame(@PathVariable("roomId") long roomId) {
         Room room = roomService.getRoomById(roomId);
-        return ucService.createGame(room.getPlayers());
+        GameUndercover gameundercover= ucService.createGame(room.getPlayers());
+        return gameundercover;
     }
 
     /*

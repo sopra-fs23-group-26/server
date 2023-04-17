@@ -58,7 +58,8 @@ public class UCService {
                 players.get(i).setVoted(false);
             }
         }
-        gameUndercover = (GameUndercover) undercoverRepository.save(gameUndercover);
+//        gameUndercover = (GameUndercover) undercoverRepository.save(gameUndercover);
+        undercoverRepository.save(gameUndercover);
         undercoverRepository.flush();
         log.debug("Created Information for game: {}", gameUndercover);
         return gameUndercover;
