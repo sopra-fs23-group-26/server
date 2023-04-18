@@ -96,11 +96,13 @@ public class UserService {
 
   public void update(User userToBeUpdated, User updateUserInfo) {
     if(updateUserInfo.getUsername() != null){
-       String updateUsername = updateUserInfo.getUsername();
-       checkEmptyString(updateUsername, "username");
-       checkIfUserExists(updateUserInfo);
-       userToBeUpdated.setUsername(updateUserInfo.getUsername());
-     }
+      String updateUsername = updateUserInfo.getUsername();
+      checkEmptyString(updateUsername, "username");
+      if(userToBeUpdated.getUsername().compareTo(updateUserInfo.getUsername()) != 0) {
+        checkIfUserExists(updateUserInfo);
+      }
+      userToBeUpdated.setUsername(updateUserInfo.getUsername());
+    }
     if(updateUserInfo.getPassword() != null){
       String updatePassword = updateUserInfo.getPassword();
       checkEmptyString(updatePassword,"password");
@@ -116,18 +118,29 @@ public class UserService {
     return userRepository.findByUsername(username);
   }
 
-  public void addFriend(User user, String username) {
+  public void addFriend(User user1, User user2, int addFriendStatus) {
 
-    User friend = userRepository.findByUsername(username);
-
-    if(friend == null) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find your friend's username!");
+    if(addFriendStatus == 1) { //addFriend
+      if(user2.getFriends().contains(user1)) {
+        throw new ResponseStatusException(HttpStatus.CONFLICT, "You have sended an adding-friend request to this friend!");
+      }
+      //when A send request to B, B will add friend A, when B accept request, A will also add friend B.
+      //The above relationship is reversal to intuition for better operation
+      user2.getFriends().add(user1);
+      userRepository.save(user2);
+    } else if(addFriendStatus == 2) {  //Accept friend
+      if(user2.getFriends().contains(user1)) {
+        throw new ResponseStatusException(HttpStatus.CONFLICT, "You have already added this friend! Please refresh the page");
+      }
+      user2.getFriends().add(user1);
+      userRepository.save(user2);
+    } else {  //reject friend
+      if(user1.getFriends().contains(user2) == false) {
+        throw new ResponseStatusException(HttpStatus.CONFLICT, "You have already rejected this friend request! Please refresh the page");
+      }
+      user1.getFriends().remove(user2);
+      userRepository.save(user1);
     }
 
-    user.getFriends().add(friend);
-    friend.getFriends().add(user);
-
-    userRepository.save(user);
-    userRepository.save(friend);
   }
 }

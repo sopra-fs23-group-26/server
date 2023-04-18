@@ -30,6 +30,8 @@ public class User implements Serializable {
   @Column(nullable = false, unique = true)
   private String username;
 
+  private String friendName;
+
   @Column(nullable = false)
   private String password;
 
@@ -163,5 +165,13 @@ public class User implements Serializable {
 
   public void setVoted(boolean voted) {
     isVoted = voted;
+  }
+
+  public String getFriendName() {
+    return friendName;
+  }
+
+  public void setFriendName(String friendName) {
+    this.friendName = friendName;
   }
 }

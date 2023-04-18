@@ -69,18 +69,6 @@ public class UserController {
     }
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
   }
-//
-//  @PutMapping("/users/{id}")
-//  @ResponseStatus(HttpStatus.NO_CONTENT)
-//  @ResponseBody
-//  public void updateUser(@PathVariable("id") long id, @RequestBody UserPutDTO userPutDTO) {
-//    User userToBeUpdated = userService.getUserById(id);
-//    User updateUserInfo = DTOMapper.INSTANCE.convertUserPutDTOtoEntity(userPutDTO);
-//    if(userToBeUpdated == null){
-//      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find user!");
-//    }
-//    userService.update(userToBeUpdated, updateUserInfo);
-//  }
 
   @PutMapping("/users/{id}")
   @ResponseBody
@@ -90,7 +78,9 @@ public class UserController {
     if(userToBeUpdated == null){
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find user!");
     }
-    if (username != null) {
+    if (username == null || username.compareTo("null") == 0) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username cannot be null!");
+    } else {
       updateUserInfo.setUsername(username);
     }
     if (image != null) {
@@ -134,7 +124,6 @@ public class UserController {
             .body(resource);
   }
 
-
   @PostMapping("/users")
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
@@ -155,29 +144,58 @@ public class UserController {
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(userService.UserLogin(userInput));
   }
 
-
-  @GetMapping("/users/{userId}/friends")
+  @GetMapping("/users/{id}/friends")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
-  public List<User> getFriends(@PathVariable long userId) {
-    User user = userService.getUserById(userId);
-    if(user == null) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find user!");
+  public List<UserGetDTO> getFriends(@PathVariable long id) {
+    User user = userService.getUserById(id);
+    List<User> allFriends = user.getFriends();
+    List<UserGetDTO> realFriends = new ArrayList<>();
+    for(int i = 0; i < allFriends.size(); i++) {
+      User realFriend = allFriends.get(i);
+      if(realFriend.getFriends().contains(user)) {
+        UserGetDTO userGetDTO = new UserGetDTO();
+        userGetDTO.setId(realFriend.getId());;
+        userGetDTO.setUsername(realFriend.getUsername());
+        userGetDTO.setImage(realFriend.getImage());
+        realFriends.add(userGetDTO);
+      }
     }
-    return user.getFriends();
+    return realFriends;
   }
 
-  @PutMapping("/users/{userId}/friends")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void addFriend(@PathVariable("userId") long userId, @RequestBody String username) {
-    User user = userService.getUserById(userId);
-    if(user == null) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find user!");
+  @GetMapping("/users/{id}/waitlist")
+  @ResponseBody
+  public List<UserGetDTO> getWaitFriend(@PathVariable Long id) {
+    User user = userService.getUserById(id);
+    List<User> allFriends = user.getFriends();
+    List<UserGetDTO> waitFriends = new ArrayList<>();
+    for(int i = 0; i < allFriends.size(); i++) {
+      User waitFriend = allFriends.get(i);
+      if(waitFriend.getFriends().contains(user) == false) {
+        UserGetDTO userGetDTO = new UserGetDTO();
+        userGetDTO.setId(waitFriend.getId());;
+        userGetDTO.setUsername(waitFriend.getUsername());
+        waitFriends.add(userGetDTO);
+      }
     }
-
-    userService.addFriend(user, username);
+    return waitFriends;
   }
 
-
-
+  @PutMapping("/users/{id}/friends")
+  @ResponseBody
+  public void addFriend(@PathVariable long id, @RequestParam(required = false) String friendName, @RequestParam(required = false) int addFriendStatus) {
+    User user1 = userService.getUserById(id);
+    if(user1 == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find user!");
+    }
+    User user2 = userService.getUserByUsername(friendName);
+    if(user2 == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find user!");
+    }
+    if(user1.getUsername().compareTo(user2.getUsername()) == 0) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "Can not add yourself as your friend!");
+    }
+    userService.addFriend(user1, user2, addFriendStatus); //addFriendStatus = 1(add friend), 2(accept friend), 3(reject friend)
+  }
 }

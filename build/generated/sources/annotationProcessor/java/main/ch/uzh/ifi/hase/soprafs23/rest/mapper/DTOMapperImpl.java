@@ -14,8 +14,8 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-04-17T22:23:59+0200",
-    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.6 (Eclipse Adoptium)"
+    date = "2023-04-18T21:16:33+0200",
+    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 17.0.6 (Private Build)"
 )
 public class DTOMapperImpl implements DTOMapper {
 
@@ -61,6 +61,7 @@ public class DTOMapperImpl implements DTOMapper {
 
         User user = new User();
 
+        user.setFriendName( userPutDTO.getFriendName() );
         user.setPassword( userPutDTO.getPassword() );
         user.setUsername( userPutDTO.getUsername() );
         user.setId( userPutDTO.getId() );
