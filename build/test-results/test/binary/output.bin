@@ -1,0 +1,23 @@
+]23:52:12.777 [Test worker] DEBUG _org.springframework.web.servlet.HandlerMapping.Mappings - 
+'	c.u.i.h.s.c.GameUnderCoverController:
+7	{POST [/undercover/rooms/{roomId}]}: createGame(long)
+5	{PUT [/undercover/{gameId}/votes]}: vote(long,User)
+N	{PUT [/undercover/{gameId}/users/{userId}/description]}: describe(long,long)
+×23:52:12.784 [Test worker] DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - 3 mappings in org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping
+Ú23:52:13.020 [Test worker] DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+½23:52:13.044 [Test worker] DEBUG org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver - ControllerAdvice beans: 0 @ExceptionHandler, 1 ResponseBodyAdvice
+23:52:13.058 [Test worker] INFO org.springframework.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+u23:52:13.058 [Test worker] INFO org.springframework.test.web.servlet.TestDispatcherServlet - Initializing Servlet ''
+‚23:52:13.060 [Test worker] DEBUG org.springframework.test.web.servlet.TestDispatcherServlet - Detected AcceptHeaderLocaleResolver
+z23:52:13.060 [Test worker] DEBUG org.springframework.test.web.servlet.TestDispatcherServlet - Detected FixedThemeResolver
+·23:52:13.060 [Test worker] DEBUG org.springframework.test.web.servlet.TestDispatcherServlet - Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@36fe83d
+¯23:52:13.060 [Test worker] DEBUG org.springframework.test.web.servlet.TestDispatcherServlet - Detected org.springframework.web.servlet.support.SessionFlashMapManager@310f8a05
+é23:52:13.060 [Test worker] DEBUG org.springframework.test.web.servlet.TestDispatcherServlet - enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+~23:52:13.060 [Test worker] INFO org.springframework.test.web.servlet.TestDispatcherServlet - Completed initialization in 1 ms
+ˆ23:52:13.094 [Test worker] DEBUG org.springframework.test.web.servlet.TestDispatcherServlet - POST "/undercover/rooms/1", parameters={}
+Ï23:52:13.097 [Test worker] DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping - Mapped to ch.uzh.ifi.hase.soprafs23.controller.GameUnderCoverController#createGame(long)
+×23:52:13.154 [Test worker] DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+¿23:52:13.155 [Test worker] DEBUG org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor - Writing [ch.uzh.ifi.hase.soprafs23.entity.GameUndercover@55d87b73]
+t23:52:13.165 [Test worker] DEBUG org.springframework.test.web.servlet.TestDispatcherServlet - Completed 201 CREATED
+s23:52:13.196 [Test worker] DEBUG com.jayway.jsonpath.internal.path.CompiledPath - Evaluating path: $['gameStatus']
+n23:52:13.198 [Test worker] DEBUG com.jayway.jsonpath.internal.path.CompiledPath - Evaluating path: $['users']
