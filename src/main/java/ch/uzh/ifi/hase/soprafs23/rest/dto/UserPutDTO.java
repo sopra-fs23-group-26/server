@@ -5,6 +5,7 @@ public class UserPutDTO {
     private String username;
     private String password;
 
+    private String friendName;
 
     public Long getId() {
         return id;
@@ -28,5 +29,13 @@ public class UserPutDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getFriendName() {
+        return friendName;
+    }
+
+    public void setFriendName(String friendName) {
+        this.friendName = friendName;
     }
 }
