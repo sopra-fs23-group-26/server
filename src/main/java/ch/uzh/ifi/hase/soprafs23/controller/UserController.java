@@ -1,23 +1,26 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
-
-import ch.uzh.ifi.hase.soprafs23.entity.User;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPutDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
-import ch.uzh.ifi.hase.soprafs23.service.UserService;
+import com.google.cloud.storage.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import org.springframework.core.io.Resource;
+import ch.uzh.ifi.hase.soprafs23.entity.User;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
+import ch.uzh.ifi.hase.soprafs23.service.UserService;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -39,6 +42,7 @@ import java.util.List;
 @RestController
 public class UserController {
   private final UserService userService;
+
 
   UserController(UserService userService) {
     this.userService = userService;
@@ -85,13 +89,13 @@ public class UserController {
     }
     if (image != null) {
       String fileName = StringUtils.cleanPath(image.getOriginalFilename());
-      String uploadDir = "user-photos/" + id;
-      File uploadDirPath = new File(uploadDir);
-      if (!uploadDirPath.exists()) {
-        uploadDirPath.mkdirs();
-      }
-      Path path = Paths.get(uploadDir + "/" + fileName);
-      Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+      String bucketName = "sopra26_user_profile_image";
+      Storage storage = StorageOptions.getDefaultInstance().getService();
+      String blobName = "user-photos/" + id + "/" + fileName;
+      BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucketName, blobName))
+              .setContentType(image.getContentType())
+              .build();
+      Blob newBlob = storage.create(blobInfo, image.getBytes());
       updateUserInfo.setImage(fileName);
     }
     userService.update(userToBeUpdated,updateUserInfo);
@@ -110,19 +114,29 @@ public class UserController {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User has no profile image!");
     }
 
-    String uploadDir = "user-photos/" + user.getId();
-    Path path = Paths.get(uploadDir + "/" + fileName);
-    Resource resource;
-    try {
-      resource = new UrlResource(path.toUri());
-    } catch (MalformedURLException e) {
+    String bucketName = "sopra26_user_profile_image";
+    Storage storage = StorageOptions.getDefaultInstance().getService();
+    Blob blob = storage.get(bucketName, "user-photos/" + user.getId() + "/" + fileName);
+    if (blob == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile image not found!");
     }
+
+    BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucketName, "user-photos/" + user.getId() + "/" + fileName))
+            .setContentType(MediaType.IMAGE_JPEG.toString())
+            .build();
+    Blob newBlob = storage.create(blobInfo, blob.getContent());
+
+    byte[] content = newBlob.getContent();
+    ByteArrayResource resource = new ByteArrayResource(content);
+
     return ResponseEntity.ok()
             .contentType(MediaType.IMAGE_JPEG)
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + ((UrlResource) resource).getFilename() + "\"")
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
             .body(resource);
   }
+
+
+
 
   @PostMapping("/users")
   @ResponseStatus(HttpStatus.CREATED)
