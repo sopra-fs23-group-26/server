@@ -66,10 +66,42 @@ public class UCService {
     }
 
     public GameUndercover vote(GameUndercover gameUndercover, User votedUser) {
-        //eliminate the votedUser from alivePlayers
-
+        //eliminate the votedUser from set users, set its isVoted filed to true
+        votedUser.setVoted(true);
         //check if the game ends (the undercover has been eliminated or only two)
-        return null;
+        Boolean ifGameEnds = ifGameEnds(gameUndercover);
+        if(ifGameEnds){
+            gameUndercover.setGameStatus(GameStatus.gameEnd);
+        }else{
+            Set<User> users = gameUndercover.getUsers();
+
+            for (User user : users) {
+                if (!user.isVoted()) {
+                    gameUndercover.setCurrentPlayerId(user.getId());
+                    break;
+                }
+            }
+        }
+        undercoverRepository.save(gameUndercover);
+        return gameUndercover;
+    }
+
+    private Boolean ifGameEnds(GameUndercover gameUndercover) {
+        Set<User> users = gameUndercover.getUsers();
+        int numAliveUsers = 0;
+        boolean undercoverVoted = false;
+
+        for (User user : users) {
+            if (!user.isVoted()) {
+                numAliveUsers++;
+            }
+
+            if (user.isUndercover() && user.isVoted()) {
+                undercoverVoted = true;
+            }
+        }
+
+        return numAliveUsers <= 2 || undercoverVoted;
     }
 
     public GameUndercover getGameById(long gameId) {
@@ -83,12 +115,48 @@ public class UCService {
     public GameUndercover describe(GameUndercover gameUndercover, User finishedUser) {
 
         //check if finished user is the last element of alivePlayers;
-
-        //if true, set the game status to voting (and set the current player to the first one who has not been eliminated)
-
+        Boolean ifRoundEnd = ifRoundEnd(gameUndercover, finishedUser);
+        //if true, set the game status to voting
+        if(ifRoundEnd){
+            gameUndercover.setGameStatus(GameStatus.voting);
+        }
         //if false, set the current player to the next one
+        else{
+            Set<User> users = gameUndercover.getUsers();
+            long currentPlayerId = gameUndercover.getCurrentPlayerId();
 
+            for (User user : users) {
+                if (user.getId() == currentPlayerId) {
+                    // Found the current player, continue iterating to find the next non-voted player.
+                    continue;
+                }
 
-        return null;
+                if (!user.isVoted()) {
+                    // Found a non-voted player after the current player, update currentPlayerId and break out of the loop.
+                    gameUndercover.setCurrentPlayerId(user.getId());
+                    break;
+                }
+            }
+        }
+        undercoverRepository.save(gameUndercover);
+        return gameUndercover;
     }
+
+    private Boolean ifRoundEnd(GameUndercover gameUndercover, User finishedUser) {
+        boolean isLastUserWithFalseVote = true;
+
+        for (User user : gameUndercover.getUsers()) {
+            if (user.isVoted()) {
+                isLastUserWithFalseVote = false;
+                break;
+            }
+
+            if (!user.equals(finishedUser)) {
+                isLastUserWithFalseVote = false;
+            }
+        }
+
+        return isLastUserWithFalseVote;
+    }
+
 }
