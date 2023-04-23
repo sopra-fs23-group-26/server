@@ -23,6 +23,13 @@ public class GameUnderCoverController {
         this.userService = userService;
     }
 
+    @GetMapping("undercover/{gameId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GameUndercover getGameByGameId(@PathVariable("gameId") long gameId){
+        return ucService.getGameById(gameId);
+    }
+
     /*create an undercover game by the following steps
     * add a player list from room object to the game
     * decide who is undercover and allocate word
@@ -43,9 +50,10 @@ public class GameUnderCoverController {
     @PutMapping("/undercover/{gameId}/users/{userId}/description")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameUndercover describe(@PathVariable("gameId") long gameId, @PathVariable long userId){
+    public GameUndercover describe(@PathVariable("gameId") long gameId, @PathVariable long userId, @RequestBody String description){
         GameUndercover gameUndercover = ucService.getGameById(gameId);
         User describedUser = userService.getUserById(userId);
+        describedUser.setDescription(description);
         return ucService.describe(gameUndercover, describedUser);
     }
 

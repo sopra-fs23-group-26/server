@@ -46,7 +46,7 @@ class UCServiceTest {
         expectedGame.setGameStatus(GameStatus.describing);
         expectedGame.setUsers(users);
         List<User> players = new ArrayList<>(users);
-        expectedGame.setCurrentPlayerId(players.get(0).getId());
+        expectedGame.setCurrentPlayerUsername(players.get(0).getUsername());
 
         WordSet wordSet = WordSet.generate();
         Random random = new Random();
@@ -72,7 +72,7 @@ class UCServiceTest {
         assertNotNull(actualGame);
         assertEquals(expectedGame.getGameStatus(), actualGame.getGameStatus());
         assertEquals(expectedGame.getUsers(), actualGame.getUsers());
-        assertEquals(expectedGame.getCurrentPlayerId(), actualGame.getCurrentPlayerId());
+        assertEquals(expectedGame.getCurrentPlayerUsername(), actualGame.getCurrentPlayerUsername());
     }
 
 

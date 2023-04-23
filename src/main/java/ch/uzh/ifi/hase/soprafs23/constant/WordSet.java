@@ -12,7 +12,7 @@ public class WordSet {
 
     /*randomly get a word set, but it's incomplete for now*/
     public static WordSet generate() {
-        return new WordSet("pig", "duck");
+        return new WordSet("pig", "cow");
     }
 
     public String getUndercoverWord() {

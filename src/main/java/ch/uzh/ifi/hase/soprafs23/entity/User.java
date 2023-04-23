@@ -53,6 +53,8 @@ public class User implements Serializable {
 
   private boolean isVoted;
 
+  private String description;
+
   @ManyToMany
   @JoinTable(name = "friends",
           joinColumns = @JoinColumn(name = "user_id"),
@@ -173,5 +175,13 @@ public class User implements Serializable {
 
   public void setFriendName(String friendName) {
     this.friendName = friendName;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 }

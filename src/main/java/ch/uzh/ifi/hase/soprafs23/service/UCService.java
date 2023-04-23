@@ -38,7 +38,7 @@ public class UCService {
         gameUndercover.setGameStatus(GameStatus.describing);
         gameUndercover.setUsers(users);
         List<User> players = new ArrayList<>(users);
-        gameUndercover.setCurrentPlayerId(players.get(0).getId());
+        gameUndercover.setCurrentPlayerUsername(players.get(0).getUsername());
 
         //allocate undercover and words
         WordSet wordSet = WordSet.generate();
@@ -77,9 +77,12 @@ public class UCService {
 
             for (User user : users) {
                 if (!user.isVoted()) {
-                    gameUndercover.setCurrentPlayerId(user.getId());
+                    gameUndercover.setCurrentPlayerUsername(user.getUsername());
                     break;
                 }
+            }
+            for (User user : users) {
+                user.setDescription(null);
             }
         }
         undercoverRepository.save(gameUndercover);
@@ -123,17 +126,17 @@ public class UCService {
         //if false, set the current player to the next one
         else{
             Set<User> users = gameUndercover.getUsers();
-            long currentPlayerId = gameUndercover.getCurrentPlayerId();
+            String currentPlayerUsername = gameUndercover.getCurrentPlayerUsername();
 
             for (User user : users) {
-                if (user.getId() == currentPlayerId) {
+                if (user.getUsername() == currentPlayerUsername) {
                     // Found the current player, continue iterating to find the next non-voted player.
                     continue;
                 }
 
                 if (!user.isVoted()) {
                     // Found a non-voted player after the current player, update currentPlayerId and break out of the loop.
-                    gameUndercover.setCurrentPlayerId(user.getId());
+                    gameUndercover.setCurrentPlayerUsername(user.getUsername());
                     break;
                 }
             }

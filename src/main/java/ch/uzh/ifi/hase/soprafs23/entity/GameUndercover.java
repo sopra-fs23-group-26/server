@@ -27,8 +27,9 @@ public class GameUndercover implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users = new HashSet<>();
 
-    private Long currentPlayerId;
     private GameStatus gameStatus;
+
+    private String currentPlayerUsername;
 
     public GameStatus getGameStatus() {
         return gameStatus;
@@ -46,14 +47,6 @@ public class GameUndercover implements Serializable {
         this.id = id;
     }
 
-    public Long getCurrentPlayerId() {
-        return currentPlayerId;
-    }
-
-    public void setCurrentPlayerId(Long currentPlayerId) {
-        this.currentPlayerId = currentPlayerId;
-    }
-
     public Room getRoom() {
         return room;
     }
@@ -68,5 +61,13 @@ public class GameUndercover implements Serializable {
 
     public void setUsers(Set<User> users) {
         this.users = users;
+    }
+
+    public String getCurrentPlayerUsername() {
+        return currentPlayerUsername;
+    }
+
+    public void setCurrentPlayerUsername(String currentPlayerUsername) {
+        this.currentPlayerUsername = currentPlayerUsername;
     }
 }

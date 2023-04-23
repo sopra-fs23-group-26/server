@@ -11,6 +11,9 @@ public class UserGetDTO {
   private int communityRanking;
   private String token;
   private String image;
+  private String word;
+  private String description;
+
   public String getImage() {
     return image;
   }
@@ -65,5 +68,21 @@ public class UserGetDTO {
 
   public void setToken(String token) {
     this.token = token;
+  }
+
+  public String getWord() {
+    return word;
+  }
+
+  public void setWord(String word) {
+    this.word = word;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 }
