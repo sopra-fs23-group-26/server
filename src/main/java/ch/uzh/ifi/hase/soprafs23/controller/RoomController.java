@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Room;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.RoomGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.RoomService;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,8 @@ import ch.uzh.ifi.hase.soprafs23.rest.dto.RoomPostDTO;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class RoomController {
@@ -30,6 +33,40 @@ public class RoomController {
         Room createdRoom = roomService.createRoom(roomInput);
         return DTOMapper.INSTANCE.convertEntityToRoomPostDTO(createdRoom);
     }
+
+
+
+
+    @GetMapping("/undercover/rooms")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public List<RoomGetDTO> findAllRoomsUndercover() throws IOException, SQLException{
+        List<RoomGetDTO> roomList = new ArrayList<>();
+        List allRooms = roomService.getAllRooms();
+        for(int i = 0; i<allRooms.size(); i++){
+            roomList.add(DTOMapper.INSTANCE.convertEntityToRoomGetDTO((Room) allRooms.get(i)));
+        }
+
+
+        return roomList;
+    }
+
+
+    @PutMapping("/undercover/rooms/{id}")
+    @ResponseBody
+    public void joinARoom(@PathVariable long id, @RequestParam Long userId) throws IOException, SQLException{
+        System.out.println("/undercover/rooms/{id}");
+
+
+
+        roomService.joinARoom(userId, id);
+
+
+    }
+
+
+
+
 
 
 }

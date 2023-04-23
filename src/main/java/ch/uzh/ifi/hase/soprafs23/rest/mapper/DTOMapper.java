@@ -60,12 +60,14 @@ public interface DTOMapper {
 //  @Mapping(source = "players", target = "players") //创建房间的时候只有owner一个人。感觉不需要传players，只用传userid过来，然后
 //  // 再到数据库里面查看
   @Mapping(source = "ownerId", target = "ownerId")
+  @Mapping(source = "players", target = "players")
   Room convertRoomPostDTOtoEntity(RoomPostDTO roomPostDTO);
 
   @Mapping(source = "id", target = "id")
   @Mapping(source = "name", target = "name")
   @Mapping(source = "gameName", target = "gameName")
   @Mapping(source = "players", target = "players")
+  @Mapping(source = "ownerId", target = "ownerId")
   RoomGetDTO convertEntityToRoomGetDTO(Room room);
 
   @Mapping(source = "id", target = "id")

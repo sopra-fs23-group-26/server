@@ -10,6 +10,8 @@ public class RoomGetDTO {
     private Set<User> players;
     private String gameName;
 
+    private Long ownerId;
+
     public Set<User> getPlayers() {
         return players;
     }
@@ -41,4 +43,9 @@ public class RoomGetDTO {
     public void setGameName(String gameName) {
         this.gameName = gameName;
     }
+
+
+    public void setOwnerId(Long ownerId){ this.ownerId=ownerId;}
+
+    public Long getOwnerId(){ return ownerId;}
 }
