@@ -46,18 +46,25 @@ public class RoomService {
         newRoom.setName(UUID.randomUUID().toString().substring(0, 5));// 创建的时候会随机生成一个名字，然后用户可以自己改到时候
         newRoom.setGameName(newRoom.getGameName());
         newRoom.setOwnerId(newRoom.getOwnerId());
-
-
         User newUser = userService.getUserById(newRoom.getOwnerId());
-        Set<User> playerList = new HashSet<>();
-        playerList.add(newUser);
-        newRoom.setPlayers(playerList);
+
+        newUser.setRoom(newRoom);
+        newRoom.getPlayers().add(newUser);
+
 
         newRoom = (Room) roomRepository.save(newRoom);
         roomRepository.flush();
+
+
+
+
+
         log.info("Created Information for Room: {}", newRoom);
-        return newRoom;
-    }
+        return newRoom;}
+//        else {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "no such user, cant create a new room") ;
+//        }
+//    }
 
     public List<Room> getAllRooms(){
 
@@ -73,24 +80,10 @@ public class RoomService {
 
     public void joinARoom(Long userId, Long roomId){
         User newUser = userService.getUserById(userId);
-        Optional<Room> roomOptional = roomRepository.findById(roomId);
-        if (roomOptional.isPresent()) {
-            Room room = roomOptional.get();
-            Set<User> players = room.getPlayers();
-            players.add(newUser);
-            room.setPlayers(players);
-            roomRepository.save(room);
-
-//            roomRepository.flush();
-
-            // do something with the room
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "join a room failed");
-
-        }
-
-
+        Room room = roomRepository.getOne(roomId);
+        room.getPlayers().add(newUser);
+        newUser.setRoom(room);
+        roomRepository.save(room);
 
     }
 

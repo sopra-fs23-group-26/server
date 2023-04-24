@@ -1,5 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -61,8 +63,9 @@ public class User implements Serializable {
           inverseJoinColumns = @JoinColumn(name = "friend_id"))
   private List<User> friends;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "room_id")
+  @JsonIgnore
   private Room room;
 
   public Room getRoom() {

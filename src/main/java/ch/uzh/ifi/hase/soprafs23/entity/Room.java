@@ -1,5 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -25,8 +27,13 @@ public class Room implements Serializable {
     @Column(nullable = false)
     private Long ownerId;
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.PERSIST, orphanRemoval = false, fetch = FetchType.EAGER)
+    @JsonIgnore
     private Set<User> players = new HashSet<>();
+
+
+
+
 
     public Set<User> getPlayers() {
         return players;
