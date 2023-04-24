@@ -31,8 +31,10 @@ public class Room implements Serializable {
     @JsonIgnore
     private Set<User> players = new HashSet<>();
 
-
-
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "gameUndercover_id")
+    @JsonIgnore
+    private GameUndercover gameUndercover;
 
 
     public Set<User> getPlayers() {
@@ -71,4 +73,11 @@ public class Room implements Serializable {
 
     public void setOwnerId(Long ownerId){ this.ownerId=ownerId;}
 
+    public GameUndercover getGameUndercover() {
+        return gameUndercover;
+    }
+
+    public void setGameUndercover(GameUndercover gameUndercover) {
+        this.gameUndercover = gameUndercover;
+    }
 }

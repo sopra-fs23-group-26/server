@@ -3,8 +3,10 @@ package ch.uzh.ifi.hase.soprafs23.service;
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.WordSet;
 import ch.uzh.ifi.hase.soprafs23.entity.GameUndercover;
+import ch.uzh.ifi.hase.soprafs23.entity.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.repository.UndercoverRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +27,22 @@ public class UCService {
 
     private final UndercoverRepository undercoverRepository;
 
+    private final UserRepository userRepository;
+
     @Autowired
-    public UCService(@Qualifier("undercoverRepository") UndercoverRepository undercoverRepository) {
+    public UCService(@Qualifier("undercoverRepository") UndercoverRepository undercoverRepository, UserRepository userRepository) {
         this.undercoverRepository = undercoverRepository;
+        this.userRepository = userRepository;
     }
 
 
 
-    public GameUndercover createGame(Set<User> users){
+    public GameUndercover createGame(Room room){
         //initialize
         GameUndercover gameUndercover = new GameUndercover();
         gameUndercover.setGameStatus(GameStatus.describing);
-        gameUndercover.setUsers(users);
-        List<User> players = new ArrayList<>(users);
+        gameUndercover.setRoom(room);
+        List<User> players = new ArrayList<>(gameUndercover.getUsers());
         gameUndercover.setCurrentPlayerUsername(players.get(0).getUsername());
 
         //allocate undercover and words
@@ -51,11 +56,14 @@ public class UCService {
         undercover.setUndercover(true);
         undercover.setWord(wordSet.getUndercoverWord());
         undercover.setVoted(false);
+        userRepository.save(undercover);
+
         for (int i = 0; i < players.size(); i++) {
             if (i != undercoverIndex) {
                 players.get(i).setUndercover(false);
                 players.get(i).setWord(wordSet.getDetectiveWord());
                 players.get(i).setVoted(false);
+                userRepository.save(players.get(i));
             }
         }
 //        gameUndercover = (GameUndercover) undercoverRepository.save(gameUndercover);

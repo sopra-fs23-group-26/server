@@ -1,10 +1,10 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
 
 
@@ -17,15 +17,10 @@ public class GameUndercover implements Serializable {
     @SequenceGenerator(name="undercover_seq", sequenceName = "UNDERCOVER_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="undercover_seq")
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
+    @JsonIgnore
     private Room room;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "game_users",
-            joinColumns = @JoinColumn(name = "game_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> users = new HashSet<>();
 
     private GameStatus gameStatus;
 
@@ -56,11 +51,7 @@ public class GameUndercover implements Serializable {
     }
 
     public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
+        return room.getPlayers();
     }
 
     public String getCurrentPlayerUsername() {
