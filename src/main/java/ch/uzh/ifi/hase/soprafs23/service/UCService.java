@@ -65,20 +65,17 @@ public class UCService {
                 players.get(i).setWord(wordSet.getDetectiveWord());
                 players.get(i).setVoted(false);
                 userRepository.save(players.get(i));
-                System.out.println(players.get(i).getWord());
             }
             else{
                 players.get(i).setUndercover(false);
                 players.get(i).setWord(wordSet.getUndercoverWord());
                 players.get(i).setVoted(false);
                 userRepository.save(players.get(i));
-                System.out.println(players.get(i).getWord());
             }
         }
 //        gameUndercover = (GameUndercover) undercoverRepository.save(gameUndercover);
         undercoverRepository.save(gameUndercover);
         undercoverRepository.flush();
-        System.out.println("Created Information for game: {}"+ gameUndercover);
         log.debug("Created Information for game: {}", gameUndercover);
         return gameUndercover;
     }
