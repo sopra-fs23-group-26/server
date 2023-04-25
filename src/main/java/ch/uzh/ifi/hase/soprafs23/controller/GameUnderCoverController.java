@@ -41,6 +41,7 @@ public class GameUnderCoverController {
     public GameUndercover createGame(@PathVariable("roomId") long roomId) {
         Room room = roomService.getRoomById(roomId);
         GameUndercover gameundercover= ucService.createGame(room);
+        System.out.println("------------gameInput------------");
         return gameundercover;
     }
 
