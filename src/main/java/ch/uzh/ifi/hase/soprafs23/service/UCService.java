@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional
@@ -81,9 +78,11 @@ public class UCService {
         return gameUndercover;
     }
 
-    public GameUndercover vote(GameUndercover gameUndercover, User votedUser) {
+    public GameUndercover vote(GameUndercover gameUndercover, List<User> votedUser) {
         //eliminate the votedUser from set users, set its isVoted filed to true
-        votedUser.setVoted(true);
+        for(User user : votedUser){
+            user.setVoted(true);
+        }
         //check if the game ends (the undercover has been eliminated or only two)
         Boolean ifGameEnds = ifGameEnds(gameUndercover);
         if(ifGameEnds){
@@ -92,10 +91,17 @@ public class UCService {
             Set<User> users = gameUndercover.getUsers();
             for (User user : users) {
                 user.setDescription(null);
+                user.setVoted(false);
+                user.setRoom(null);
+                user.setWord(null);
+                user.setUndercover(false);
+                user.setVotes(0);
             }
         }else{
+            // start a new round:
             Set<User> users = gameUndercover.getUsers();
 
+            // set the current player to first who are not out
             for (User user : users) {
                 if (!user.isVoted()) {
                     gameUndercover.setCurrentPlayerUsername(user.getUsername());
@@ -104,6 +110,7 @@ public class UCService {
             }
             for (User user : users) {
                 user.setDescription(null);
+                user.setVotes(0);
             }
         }
         undercoverRepository.save(gameUndercover);
@@ -150,7 +157,7 @@ public class UCService {
             String currentPlayerUsername = gameUndercover.getCurrentPlayerUsername();
 
             for (User user : users) {
-                if (user.getUsername() == currentPlayerUsername) {
+                if (Objects.equals(user.getUsername(), currentPlayerUsername)) {
                     // Found the current player, continue iterating to find the next non-voted player.
                     continue;
                 }
@@ -166,6 +173,7 @@ public class UCService {
         return gameUndercover;
     }
 
+    //check if finished user is the last who is not out in the players set
     private Boolean ifRoundEnd(GameUndercover gameUndercover, User finishedUser) {
         boolean isLastUserWithFalseVote = true;
 
@@ -181,6 +189,47 @@ public class UCService {
         }
 
         return isLastUserWithFalseVote;
+    }
+
+    public Boolean voteAndCheckIfEnds(GameUndercover gameUndercover, User votedUser) {
+        votedUser.setVotes(votedUser.getVotes()+1);
+        int notOutPlayersNum = 0;
+        int totalVotes = 0;
+        for (User user :gameUndercover.getUsers()){
+            if(!user.isVoted()){
+                notOutPlayersNum = notOutPlayersNum + 1;
+                totalVotes = totalVotes + user.getVotes();
+            }
+            if (notOutPlayersNum == totalVotes){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<User> getOutUsers(GameUndercover gameUndercover) {
+        // Get all users in the game
+        Set<User> players = gameUndercover.getUsers();
+        List<User> users = new ArrayList<>(players);
+
+
+        // Find the maximum number of votes received by a user
+        int maxVotes = Integer.MIN_VALUE;
+        for (User user : users) {
+            if (user.isVoted() && user.getVotes() > maxVotes) {
+                maxVotes = user.getVotes();
+            }
+        }
+
+        // Collect all users with the maximum number of votes
+        List<User> outUsers = new ArrayList<>();
+        for (User user : users) {
+            if (!user.isVoted() && user.getVotes() == maxVotes) {
+                outUsers.add(user);
+            }
+        }
+
+        return outUsers;
     }
 
 }

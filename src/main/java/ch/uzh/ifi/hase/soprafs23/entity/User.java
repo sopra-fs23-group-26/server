@@ -68,6 +68,8 @@ public class User implements Serializable {
   @JsonIgnore
   private Room room;
 
+  private int votes;
+
   public Room getRoom() {
     return room;
   }
@@ -186,5 +188,13 @@ public class User implements Serializable {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public int getVotes() {
+    return votes;
+  }
+
+  public void setVotes(int votes) {
+    this.votes = votes;
   }
 }

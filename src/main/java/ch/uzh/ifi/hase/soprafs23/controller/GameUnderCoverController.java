@@ -9,6 +9,9 @@ import ch.uzh.ifi.hase.soprafs23.service.UCService;
 import ch.uzh.ifi.hase.soprafs23.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @RestController
 public class GameUnderCoverController {
@@ -64,12 +67,31 @@ public class GameUnderCoverController {
     /*
     * when a round of voting finished, use this put mapping
     * to update the voting result and determine whether game ends*/
-    @PutMapping("/undercover/{gameId}/votes")
+    @PutMapping("/undercover/{gameId}/votes/{voteUserId}/{votedUserId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameUndercover vote(@PathVariable("gameId") long gameId,@RequestBody User votedUser){
+    public GameUndercover vote(@PathVariable("gameId") long gameId, @PathVariable("voteUserId") long voteUserId,
+    @PathVariable("votedUserId") long votedUserId){
         GameUndercover gameUndercover = ucService.getGameById(gameId);
-        return ucService.vote(gameUndercover, votedUser);
+        User voteUser = userService.getUserById(voteUserId);
+        User votedUser = userService.getUserById(votedUserId);
+        // verify if the vote is valid
+        if(voteUser.isVoted()){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are out, please wait until the game ends:)");
+        }
+        if(votedUser.isVoted()){
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You select someone who is out, please choose again");
+        }
+        // add vote and verify whether everyone has voted
+        Boolean ifEnds = ucService.voteAndCheckIfEnds(gameUndercover, votedUser);
+
+        if(!ifEnds){
+            return gameUndercover;
+        }else{
+            //get user who gets most votes
+            List<User> outUser = ucService.getOutUsers(gameUndercover);
+            return ucService.vote(gameUndercover, outUser);
+        }
     }
 
 
