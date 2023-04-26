@@ -46,15 +46,11 @@ public class RoomService {
         newUser.setRoom(newRoom);
         newRoom.getPlayers().add(newUser);
 
-
         newRoom = (Room) roomRepository.save(newRoom);
         roomRepository.flush();
 
-
-
-
-
         log.info("Created Information for Room: {}", newRoom);
+        System.out.println("newroomid: "+newRoom.getId());
         return newRoom;}
 //        else {
 //            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "no such user, cant create a new room") ;
@@ -66,8 +62,6 @@ public class RoomService {
         List allRooms = roomRepository.findAll();
         log.info("find Information for all Rooms: {}", allRooms);
         return allRooms;
-
-
 
     }
 

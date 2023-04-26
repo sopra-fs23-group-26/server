@@ -28,8 +28,8 @@ public class RoomController {
     public RoomPostDTO createRoomUndercover(@RequestBody RoomPostDTO roomPostDTO) throws IOException, SQLException{
         Room roomInput = DTOMapper.INSTANCE.convertRoomPostDTOtoEntity(roomPostDTO);
         System.out.println("------------roomInput------------");
-        System.out.println(roomInput.getGameName());
-        System.out.println(roomInput.getOwnerId());
+        System.out.println("gamename: "+roomInput.getGameName());
+        System.out.println("ownerid: "+roomInput.getOwnerId());
         Room createdRoom = roomService.createRoom(roomInput);
         return DTOMapper.INSTANCE.convertEntityToRoomPostDTO(createdRoom);
     }

@@ -58,7 +58,8 @@ public class GameUnderCoverController {
         GameUndercover gameUndercover = ucService.getGameById(gameId);
         User describedUser = userService.getUserById(userId);
         describedUser.setDescription(description);
-        return ucService.describe(gameUndercover, describedUser);
+        gameUndercover=ucService.describe(gameUndercover, describedUser);
+        return gameUndercover;
     }
 
     /*
