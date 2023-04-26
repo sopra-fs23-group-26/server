@@ -76,6 +76,7 @@ public class UCService {
 //        gameUndercover = (GameUndercover) undercoverRepository.save(gameUndercover);
         undercoverRepository.save(gameUndercover);
         undercoverRepository.flush();
+        room.setGameUndercover(gameUndercover);
         log.debug("Created Information for game: {}", gameUndercover);
         return gameUndercover;
     }
@@ -87,6 +88,11 @@ public class UCService {
         Boolean ifGameEnds = ifGameEnds(gameUndercover);
         if(ifGameEnds){
             gameUndercover.setGameStatus(GameStatus.gameEnd);
+
+            Set<User> users = gameUndercover.getUsers();
+            for (User user : users) {
+                user.setDescription(null);
+            }
         }else{
             Set<User> users = gameUndercover.getUsers();
 

@@ -52,16 +52,12 @@ public class RoomController {
     }
 
 
-    @PutMapping("/undercover/rooms/{id}")
+    @PutMapping("/undercover/rooms/{roomId}/{userId}")
     @ResponseBody
-    public void joinARoom(@PathVariable long id, @RequestParam Long userId) throws IOException, SQLException{
+    public RoomGetDTO joinARoom(@PathVariable("roomId") long roomId, @PathVariable("userId") long userId) throws IOException, SQLException{
         System.out.println("/undercover/rooms/{id}");
-
-
-
-        roomService.joinARoom(userId, id);
-
-
+        roomService.joinARoom(userId, roomId);
+        return DTOMapper.INSTANCE.convertEntityToRoomGetDTO(roomService.getRoomById(roomId));
     }
 
 

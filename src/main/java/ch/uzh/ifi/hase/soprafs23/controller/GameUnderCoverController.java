@@ -40,6 +40,9 @@ public class GameUnderCoverController {
     @ResponseBody
     public GameUndercover createGame(@PathVariable("roomId") long roomId) {
         Room room = roomService.getRoomById(roomId);
+        if(room.getGameUndercover()!=null){
+            return room.getGameUndercover();
+        }
         GameUndercover gameundercover= ucService.createGame(room);
         System.out.println("------------gameInput------------");
         return gameundercover;
@@ -51,7 +54,7 @@ public class GameUnderCoverController {
     @PutMapping("/undercover/{gameId}/users/{userId}/description")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameUndercover describe(@PathVariable("gameId") long gameId, @PathVariable long userId, @RequestBody String description){
+    public GameUndercover describe(@PathVariable("gameId") long gameId, @PathVariable("userId") long userId, @RequestBody String description){
         GameUndercover gameUndercover = ucService.getGameById(gameId);
         User describedUser = userService.getUserById(userId);
         describedUser.setDescription(description);
