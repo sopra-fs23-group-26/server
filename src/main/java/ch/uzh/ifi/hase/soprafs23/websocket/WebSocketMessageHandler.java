@@ -19,13 +19,13 @@ public class WebSocketMessageHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         sessions.add(session);
-        System.out.println("WebSocket connected: " + session.getId());
+//        System.out.println("WebSocket connected: " + session.getId());
     }
 
     // 消息接收时触发
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        System.out.println("WebSocket message received: " + message.getPayload());
+//        System.out.println("WebSocket message received: " + message.getPayload());
         // 广播消息给所有连接的客户端
         for (WebSocketSession s : sessions) {
             if (s.isOpen()) {
@@ -38,7 +38,7 @@ public class WebSocketMessageHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         sessions.remove(session);
-        System.out.println("WebSocket disconnected: " + session.getId());
+//        System.out.println("WebSocket disconnected: " + session.getId());
     }
 }
 
