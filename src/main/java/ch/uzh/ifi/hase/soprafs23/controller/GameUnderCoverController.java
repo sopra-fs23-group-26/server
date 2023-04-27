@@ -30,7 +30,9 @@ public class GameUnderCoverController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public GameUndercover getGameByGameId(@PathVariable("gameId") long gameId){
-        return ucService.getGameById(gameId);
+        GameUndercover game = ucService.getGameById(gameId);
+        System.out.println(game.getGameStatus());
+        return game;
     }
 
     /*create an undercover game by the following steps
@@ -94,8 +96,5 @@ public class GameUnderCoverController {
             return ucService.vote(gameUndercover, outUser);
         }
     }
-
-
-
 
 }
