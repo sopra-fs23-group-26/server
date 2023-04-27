@@ -46,17 +46,22 @@ public class UCService {
         GameUndercover gameUndercover = new GameUndercover();
         gameUndercover.setGameStatus(GameStatus.describing);
         gameUndercover.setRoom(room);
-        List<User> players = new ArrayList<>(gameUndercover.getUsers());
-        gameUndercover.setCurrentPlayerUsername(players.get(0).getUsername());
+        List<User> userlist = new ArrayList<>(gameUndercover.getUsers());
+        Collections.sort(userlist, new Comparator<User>() {
+            public int compare(User u1, User u2) {
+                return Long.compare(u1.getId(), u2.getId());
+            }
+        });
+        gameUndercover.setCurrentPlayerUsername(userlist.get(0).getUsername());
 
         //allocate undercover and words
         WordSet wordSet = WordSet.generate();
         // Choose a random index for the undercover player
         Random random = new Random();
-        int undercoverIndex = random.nextInt(players.size());
+        int undercoverIndex = random.nextInt(userlist.size());
 
         // Set the undercover player's role to be UNDERCOVER
-        User undercover = players.get(undercoverIndex);
+        User undercover = userlist.get(undercoverIndex);
         undercover.setUndercover(true);
         undercover.setWord(wordSet.getUndercoverWord());
         undercover.setVoted(false);
@@ -66,14 +71,14 @@ public class UCService {
 
 
         //set others to be detective
-        for (int i = 0; i < players.size(); i++) {
+        for (int i = 0; i < userlist.size(); i++) {
             if (i != undercoverIndex) {
-                players.get(i).setUndercover(false);
-                players.get(i).setWord(wordSet.getDetectiveWord());
-                players.get(i).setVoted(false);
-                players.get(i).setVotes(0);
-                players.get(i).setDescription(null);
-                userRepository.save(players.get(i));
+                userlist.get(i).setUndercover(false);
+                userlist.get(i).setWord(wordSet.getDetectiveWord());
+                userlist.get(i).setVoted(false);
+                userlist.get(i).setVotes(0);
+                userlist.get(i).setDescription(null);
+                userRepository.save(userlist.get(i));
             }
         }
 //        gameUndercover = (GameUndercover) undercoverRepository.save(gameUndercover);
@@ -86,6 +91,7 @@ public class UCService {
 
     public GameUndercover vote(GameUndercover gameUndercover, List<User> votedUser) {
         //eliminate the votedUser from set users, set its isVoted filed to true
+
         for(User user : votedUser){
             user.setVoted(true);
             userRepository.save(user);
@@ -99,15 +105,21 @@ public class UCService {
 
             // start a new round:
             Set<User> users = gameUndercover.getUsers();
+            List<User> userlist = new ArrayList<>(users);
+            Collections.sort(userlist, new Comparator<User>() {
+                public int compare(User u1, User u2) {
+                    return Long.compare(u1.getId(), u2.getId());
+                }
+            });
 
             // set the current player to first who are not out
-            for (User user : users) {
+            for (User user : userlist) {
                 if (!user.isVoted()) {
                     gameUndercover.setCurrentPlayerUsername(user.getUsername());
                     break;
                 }
             }
-            for (User user : users) {
+            for (User user : userlist) {
                 user.setDescription(null);
                 user.setVotes(0);
                 userRepository.save(user);
@@ -198,29 +210,55 @@ public class UCService {
     public GameUndercover describe(GameUndercover gameUndercover, User finishedUser) {
 
         //check if finished user is the last element of alivePlayers;
-        boolean ifRoundEnd = ifRoundEnd(gameUndercover, finishedUser);
+        //boolean ifRoundEnd = ifRoundEnd(gameUndercover, finishedUser);
         //if true, set the game status to voting
+        Set<User> users = gameUndercover.getUsers();
+        String currentPlayerUsername = gameUndercover.getCurrentPlayerUsername();
+
+        List<User> userlist = new ArrayList<>(users);
+        Collections.sort(userlist, new Comparator<User>() {
+            public int compare(User u1, User u2) {
+                return Long.compare(u1.getId(), u2.getId());
+            }
+        });
+
+        boolean afterCurrentUser = false;
+        boolean ifRoundEnd=true;
+        boolean setNextUser=false;
+
+        for (User user : userlist) {
+            if(user.getId() == finishedUser.getId()){
+                afterCurrentUser=true;
+            }
+            if(afterCurrentUser){
+                if(user.isVoted()==false&&user.getId()!=finishedUser.getId()){
+                    ifRoundEnd = false;
+                    if(!setNextUser) {
+                        gameUndercover.setCurrentPlayerUsername(user.getUsername());
+                        setNextUser=true;
+                    }
+                }
+            }
+        }
+
         if(ifRoundEnd){
             gameUndercover.setGameStatus(GameStatus.voting);
         }
         //if false, set the current player to the next one
-        else{
-            Set<User> users = gameUndercover.getUsers();
-            String currentPlayerUsername = gameUndercover.getCurrentPlayerUsername();
-
-            for (User user : users) {
-                if (Objects.equals(user.getUsername(), currentPlayerUsername)) {
-                    // Found the current player, continue iterating to find the next non-voted player.
-                    continue;
-                }
-
-                if (!user.isVoted()) {
-                    // Found a non-voted player after the current player, update currentPlayerId and break out of the loop.
-                    gameUndercover.setCurrentPlayerUsername(user.getUsername());
-                    break;
-                }
-            }
-        }
+//        else{
+//            for (User user : userlist) {
+//                if (Objects.equals(user.getUsername(), currentPlayerUsername)) {
+//                    // Found the current player, continue iterating to find the next non-voted player.
+//                    continue;
+//                }
+//
+//                if (!user.isVoted()) {
+//                    // Found a non-voted player after the current player, update currentPlayerId and break out of the loop.
+//                    gameUndercover.setCurrentPlayerUsername(user.getUsername());
+//                    break;
+//                }
+//            }
+//        }
         undercoverRepository.save(gameUndercover);
         return gameUndercover;
     }
@@ -230,7 +268,17 @@ public class UCService {
         boolean isLastUserWithFalseVote = true;
 
         Set<User> users = gameUndercover.getUsers();
-        Iterator<User> it = users.iterator();
+
+
+        List<User> userlist = new ArrayList<>(users);
+        Collections.sort(userlist, new Comparator<User>() {
+            public int compare(User u1, User u2) {
+                return Long.compare(u1.getId(), u2.getId());
+            }
+        });
+        Iterator<User> it = userlist.iterator();
+
+
 
         // first find the current player
         while (it.hasNext()) {
