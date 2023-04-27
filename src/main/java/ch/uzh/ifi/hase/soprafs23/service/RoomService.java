@@ -1,14 +1,17 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.constant.RoomStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import ch.uzh.ifi.hase.soprafs23.repository.RoomRepository;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -70,6 +73,9 @@ public class RoomService {
     public void joinARoom(long userId, long roomId){
         User newUser = userService.getUserById(userId);
         Room room = roomRepository.findById(roomId);
+        if(room.getRoomStatus()== RoomStatus.inGame){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "The game has already started.");
+        }
         room.getPlayers().add(newUser);
         newUser.setRoom(room);
         roomRepository.save(room);
