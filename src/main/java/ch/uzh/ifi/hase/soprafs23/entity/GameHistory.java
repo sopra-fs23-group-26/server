@@ -2,7 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "GameHistory")
@@ -15,7 +15,7 @@ public class GameHistory implements Serializable {
     private Long id;
 
     @Column
-    private LocalTime time;
+    private LocalDateTime time;
 
     @Column
     private String username;
@@ -69,11 +69,11 @@ public class GameHistory implements Serializable {
         this.winOrLose = winOrLose;
     }
 
-    public LocalTime getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
 
-    public void setTime(LocalTime time) {
+    public void setTime(LocalDateTime time) {
         this.time = time;
     }
 }

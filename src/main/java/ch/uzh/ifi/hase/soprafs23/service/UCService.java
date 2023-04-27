@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -346,7 +346,7 @@ public class UCService {
         gameHistory.setEarnedPoint(earnedPoint);
         gameHistory.setGameName(gameName);
         gameHistory.setWinOrLose(winOrLose);
-        gameHistory.setTime(LocalTime.now());
+        gameHistory.setTime(LocalDateTime.now());
 
         gameHistoryRepository.save(gameHistory);
         gameHistoryRepository.flush();
