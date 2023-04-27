@@ -2,9 +2,11 @@ package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.WordSet;
+import ch.uzh.ifi.hase.soprafs23.entity.GameHistory;
 import ch.uzh.ifi.hase.soprafs23.entity.GameUndercover;
 import ch.uzh.ifi.hase.soprafs23.entity.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
+import ch.uzh.ifi.hase.soprafs23.repository.GameHistoryRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.UndercoverRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
 import org.slf4j.Logger;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
 import java.util.*;
 
 @Service
@@ -26,10 +29,12 @@ public class UCService {
 
     private final UserRepository userRepository;
 
+    private final GameHistoryRepository gameHistoryRepository;
     @Autowired
-    public UCService(@Qualifier("undercoverRepository") UndercoverRepository undercoverRepository, UserRepository userRepository) {
+    public UCService(@Qualifier("undercoverRepository") UndercoverRepository undercoverRepository, UserRepository userRepository,GameHistoryRepository gameHistoryRepository) {
         this.undercoverRepository = undercoverRepository;
         this.userRepository = userRepository;
+        this.gameHistoryRepository = gameHistoryRepository;
     }
 
 
@@ -81,17 +86,7 @@ public class UCService {
         //check if the game ends (the undercover has been eliminated or only two)
         Boolean ifGameEnds = ifGameEnds(gameUndercover);
         if(ifGameEnds){
-            gameUndercover.setGameStatus(GameStatus.gameEnd);
-
-            Set<User> users = gameUndercover.getUsers();
-            for (User user : users) {
-                user.setDescription(null);
-                user.setVoted(false);
-                user.setRoom(null);
-                user.setWord(null);
-                user.setUndercover(false);
-                user.setVotes(0);
-            }
+            gameEndsSetting(gameUndercover);
         }else{
             // start a new round:
             Set<User> users = gameUndercover.getUsers();
@@ -110,6 +105,58 @@ public class UCService {
         }
         undercoverRepository.save(gameUndercover);
         return gameUndercover;
+    }
+
+    private void gameEndsSetting(GameUndercover gameUndercover) {
+        // first set the game status to "gameEnd"
+        gameUndercover.setGameStatus(GameStatus.gameEnd);
+
+        // save the game history
+        boolean ifUndercoverWin = ifUndercoverWin(gameUndercover);
+        if(ifUndercoverWin){
+            for(User user: gameUndercover.getUsers()){
+                if(user.isUndercover()){
+                    createGameHistory("undercover", user.getUsername(), "+5", "WIN");
+                    user.setScore(user.getScore()+5);
+                }else{
+                    createGameHistory("undercover", user.getUsername(), "+0", "LOSE");
+                }
+            }
+        }else{
+            for(User user: gameUndercover.getUsers()){
+                if(user.isUndercover()){
+                    createGameHistory("undercover", user.getUsername(), "+0", "LOSE");
+                }else{
+                    createGameHistory("undercover", user.getUsername(), "+2", "WIN");
+                    user.setScore(user.getScore()+2);
+                }
+            }
+        }
+
+        // clear everything regarding game infos on every user(user is reusable)
+        Set<User> users = gameUndercover.getUsers();
+        for (User user : users) {
+            user.setDescription(null);
+            user.setVoted(false);
+            user.setRoom(null);
+            user.setWord(null);
+            user.setUndercover(false);
+            user.setVotes(0);
+        }
+
+        // clear the room
+
+    }
+
+    private boolean ifUndercoverWin(GameUndercover gameUndercover) {
+        boolean result = false;
+        for(User user: gameUndercover.getUsers()){
+            if (user.isUndercover() && !user.isVoted()) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 
     private Boolean ifGameEnds(GameUndercover gameUndercover) {
@@ -235,6 +282,18 @@ public class UCService {
         }
 
         return outUsers;
+    }
+
+    public void createGameHistory(String gameName, String username, String earnedPoint, String winOrLose){
+        GameHistory gameHistory = new GameHistory();
+        gameHistory.setUsername(username);
+        gameHistory.setEarnedPoint(earnedPoint);
+        gameHistory.setGameName(gameName);
+        gameHistory.setWinOrLose(winOrLose);
+        gameHistory.setTime(LocalTime.now());
+
+        gameHistoryRepository.save(gameHistory);
+        gameHistoryRepository.flush();
     }
 
 }

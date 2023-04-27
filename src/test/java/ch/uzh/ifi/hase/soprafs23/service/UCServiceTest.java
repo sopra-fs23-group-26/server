@@ -1,10 +1,10 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
-import ch.uzh.ifi.hase.soprafs23.constant.WordSet;
 import ch.uzh.ifi.hase.soprafs23.entity.GameUndercover;
 import ch.uzh.ifi.hase.soprafs23.entity.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
+import ch.uzh.ifi.hase.soprafs23.repository.GameHistoryRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.RoomRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.UndercoverRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.*;
@@ -28,11 +27,15 @@ class UCServiceTest {
     UserRepository userRepository;
     @Mock
     RoomRepository roomRepository;
+    @Mock
+    GameHistoryRepository gameHistoryRepository;
 
     @InjectMocks
     UCService ucService;
     @InjectMocks
     RoomService roomService;
+    @InjectMocks
+    GameHistoryService gameHistoryService;
 
     @BeforeEach
     public void setup() {
