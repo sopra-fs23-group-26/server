@@ -38,6 +38,7 @@ public class Room implements Serializable {
     private GameUndercover gameUndercover;
 
 
+
     @Column(nullable = false)
     private RoomStatus roomStatus=RoomStatus.waiting;
 
