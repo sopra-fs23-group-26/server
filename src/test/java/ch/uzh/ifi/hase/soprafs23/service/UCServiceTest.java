@@ -49,11 +49,13 @@ class UCServiceTest {
         room.setId(1L);
         Set<User> users = new HashSet<>();
         User user1 = new User();
+        user1.setId(1L);
         user1.setUsername("user1");
         user1.setVoted(false);
         user1.setUndercover(false);
         user1.setWord("word1");
         User user2 = new User();
+        user2.setId(2L);
         user2.setUsername("user2");
         user2.setVoted(false);
         user2.setUndercover(true);
@@ -85,11 +87,15 @@ class UCServiceTest {
         user1.setVoted(false);
         user1.setUndercover(false);
         user1.setWord("word1");
+        user1.setId(1L);
+
         User user2 = new User();
         user2.setUsername("user2");
         user2.setVoted(false);
         user2.setUndercover(true);
         user2.setWord("word2");
+        user2.setId(2L);
+
         users.add(user1);
         users.add(user2);
         room.setPlayers(users);
