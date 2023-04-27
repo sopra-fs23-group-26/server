@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
+import ch.uzh.ifi.hase.soprafs23.constant.RoomStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -35,6 +36,10 @@ public class Room implements Serializable {
     @JoinColumn(name = "gameUndercover_id")
     @JsonIgnore
     private GameUndercover gameUndercover;
+
+
+    @Column(nullable = false)
+    private RoomStatus roomStatus=RoomStatus.waiting;
 
 
     public Set<User> getPlayers() {
@@ -80,4 +85,8 @@ public class Room implements Serializable {
     public void setGameUndercover(GameUndercover gameUndercover) {
         this.gameUndercover = gameUndercover;
     }
+
+    public RoomStatus getRoomStatus(){return roomStatus;}
+
+    public void setRoomStatus(RoomStatus roomStatus){this.roomStatus=roomStatus;}
 }
