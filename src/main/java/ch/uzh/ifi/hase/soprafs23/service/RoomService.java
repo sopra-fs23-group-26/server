@@ -42,6 +42,7 @@ public class RoomService {
 
     public Room createRoom(Room newRoom){
 //        newRoom.setName(UUID.randomUUID().toString().substring(0, 5));// 创建的时候会随机生成一个名字，然后用户可以自己改到时候
+        try{
         newRoom.setGameName(newRoom.getGameName());
         newRoom.setOwnerId(newRoom.getOwnerId());
         User newUser = userService.getUserById(newRoom.getOwnerId());
@@ -55,6 +56,12 @@ public class RoomService {
         log.info("Created Information for Room: {}", newRoom);
         System.out.println("newroomid: "+newRoom.getId());
         return newRoom;}
+        catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "a room with the same has been created", e);
+        }
+
+    }
+
 //        else {
 //            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "no such user, cant create a new room") ;
 //        }
