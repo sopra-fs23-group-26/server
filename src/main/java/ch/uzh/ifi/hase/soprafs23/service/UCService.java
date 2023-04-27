@@ -56,16 +56,11 @@ public class UCService {
         undercover.setVoted(false);
         userRepository.save(undercover);
 
+        //set others to be detective
         for (int i = 0; i < players.size(); i++) {
             if (i != undercoverIndex) {
                 players.get(i).setUndercover(false);
                 players.get(i).setWord(wordSet.getDetectiveWord());
-                players.get(i).setVoted(false);
-                userRepository.save(players.get(i));
-            }
-            else{
-                players.get(i).setUndercover(false);
-                players.get(i).setWord(wordSet.getUndercoverWord());
                 players.get(i).setVoted(false);
                 userRepository.save(players.get(i));
             }
