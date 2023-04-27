@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
+import ch.uzh.ifi.hase.soprafs23.constant.RoomStatus;
 import ch.uzh.ifi.hase.soprafs23.constant.WordSet;
 import ch.uzh.ifi.hase.soprafs23.entity.GameHistory;
 import ch.uzh.ifi.hase.soprafs23.entity.GameUndercover;
@@ -22,7 +23,6 @@ import java.util.*;
 @Service
 @Transactional
 public class UCService {
-
     private final Logger log = LoggerFactory.getLogger(UCService.class);
 
     private final UndercoverRepository undercoverRepository;
@@ -41,6 +41,7 @@ public class UCService {
 
     public GameUndercover createGame(Room room){
         //initialize
+        room.setRoomStatus(RoomStatus.inGame);
         System.out.println("1");
         GameUndercover gameUndercover = new GameUndercover();
         gameUndercover.setGameStatus(GameStatus.describing);
@@ -60,6 +61,7 @@ public class UCService {
         undercover.setWord(wordSet.getUndercoverWord());
         undercover.setVoted(false);
         undercover.setVotes(0);
+        undercover.setDescription(null);
         userRepository.save(undercover);
 
 
@@ -70,6 +72,7 @@ public class UCService {
                 players.get(i).setWord(wordSet.getDetectiveWord());
                 players.get(i).setVoted(false);
                 players.get(i).setVotes(0);
+                players.get(i).setDescription(null);
                 userRepository.save(players.get(i));
             }
         }
