@@ -141,7 +141,7 @@ public class UCService {
     public GameUndercover describe(GameUndercover gameUndercover, User finishedUser) {
 
         //check if finished user is the last element of alivePlayers;
-        Boolean ifRoundEnd = ifRoundEnd(gameUndercover, finishedUser);
+        boolean ifRoundEnd = ifRoundEnd(gameUndercover, finishedUser);
         //if true, set the game status to voting
         if(ifRoundEnd){
             gameUndercover.setGameStatus(GameStatus.voting);
@@ -169,22 +169,32 @@ public class UCService {
     }
 
     //check if finished user is the last who is not out in the players set
-    private Boolean ifRoundEnd(GameUndercover gameUndercover, User finishedUser) {
+    private boolean ifRoundEnd(GameUndercover gameUndercover, User finishedUser) {
         boolean isLastUserWithFalseVote = true;
 
-        for (User user : gameUndercover.getUsers()) {
-            if (user.isVoted()) {
-                isLastUserWithFalseVote = false;
+        Set<User> users = gameUndercover.getUsers();
+        Iterator<User> it = users.iterator();
+
+        // first find the current player
+        while (it.hasNext()) {
+            User currentUser = it.next();
+            if (currentUser == finishedUser) {
                 break;
             }
+        }
 
-            if (!user.equals(finishedUser)) {
+        // then verify if players after him is out
+        while(it.hasNext()){
+            User currentUser = it.next();
+            if (!currentUser.isVoted()){
                 isLastUserWithFalseVote = false;
             }
         }
 
         return isLastUserWithFalseVote;
     }
+
+
 
     public Boolean voteAndCheckIfEnds(GameUndercover gameUndercover, User votedUser) {
         votedUser.setVotes(votedUser.getVotes()+1);
