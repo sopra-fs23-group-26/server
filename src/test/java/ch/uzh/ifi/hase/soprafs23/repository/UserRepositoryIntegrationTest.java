@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -23,6 +24,7 @@ public class UserRepositoryIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
+    private Long id;
 
     @Test
     public void findByUsername_success() throws IOException, SQLException {

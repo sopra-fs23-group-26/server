@@ -64,6 +64,14 @@ public class UserControllerTest {
         mockMvc.perform(getRequest).andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].username", is(user.getUsername())));
+
+    }
+
+    @Test
+    public void getSingleUser_notFound() throws Exception {
+        MockHttpServletRequestBuilder getRequest = get("/users/100").contentType(MediaType.APPLICATION_JSON);
+        mockMvc.perform(getRequest).andExpect(status().isNotFound());
+
     }
 
     @Test
@@ -168,6 +176,8 @@ public class UserControllerTest {
         friend.setUsername("testFriend");
         List<User> friendList2 = new ArrayList<>();
         friend.setFriends(friendList2);
+
+        friendList.add(friend);
 
         given(userService.getUserById(user.getId())).willReturn(user);
         given(userService.getUserByUsername(friend.getUsername())).willReturn(friend);
