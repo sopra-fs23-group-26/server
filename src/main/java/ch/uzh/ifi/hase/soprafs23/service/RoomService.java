@@ -98,6 +98,17 @@ public class RoomService {
 
     }
 
+    public void deleteARoom(long roomId){
+        Room roomToDelete = roomRepository.findById(roomId);
+        for(User user: roomToDelete.getPlayers()){
+            user.setRoom(null);
+        }
+
+        roomRepository.delete(roomToDelete);
+        roomRepository.flush();
+
+    }
+
 }
 
 

@@ -78,6 +78,20 @@ public class RoomController {
 
 
 
+    @DeleteMapping("/undercover/rooms/{roomId}")
+    @ResponseBody
+    public RoomGetDTO deleteARoom(@PathVariable("roomId") long roomId) throws IOException, SQLException{
+        System.out.println("/undercover/rooms/{id}");
+        Room roomToDelete = roomService.getRoomById(roomId);
+        roomService.deleteARoom(roomId);
+        return DTOMapper.INSTANCE.convertEntityToRoomGetDTO(roomService.getRoomById(roomId));
+    }
+
+
+
+
+
+
 
 
 
