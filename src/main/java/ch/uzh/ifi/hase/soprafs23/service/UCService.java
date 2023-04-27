@@ -88,12 +88,15 @@ public class UCService {
         //eliminate the votedUser from set users, set its isVoted filed to true
         for(User user : votedUser){
             user.setVoted(true);
+            userRepository.save(user);
         }
         //check if the game ends (the undercover has been eliminated or only two)
         Boolean ifGameEnds = ifGameEnds(gameUndercover);
         if(ifGameEnds){
             gameEndsSetting(gameUndercover);
         }else{
+            gameUndercover.setGameStatus(GameStatus.describing);
+
             // start a new round:
             Set<User> users = gameUndercover.getUsers();
 
@@ -107,6 +110,7 @@ public class UCService {
             for (User user : users) {
                 user.setDescription(null);
                 user.setVotes(0);
+                userRepository.save(user);
             }
         }
         undercoverRepository.save(gameUndercover);
@@ -251,6 +255,7 @@ public class UCService {
 
     public Boolean voteAndCheckIfEnds(GameUndercover gameUndercover, User votedUser) {
         votedUser.setVotes(votedUser.getVotes()+1);
+        userRepository.save(votedUser);
         int notOutPlayersNum = 0;
         int totalVotes = 0;
         for (User user :gameUndercover.getUsers()){
@@ -271,7 +276,7 @@ public class UCService {
         // Find the maximum number of votes received by a user
         int maxVotes = Integer.MIN_VALUE;
         for (User user : users) {
-            if (user.isVoted() && user.getVotes() > maxVotes) {
+            if (!user.isVoted() && user.getVotes() > maxVotes) {
                 maxVotes = user.getVotes();
             }
         }
