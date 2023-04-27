@@ -75,6 +75,16 @@ public class RoomService {
         roomRepository.save(room);
     }
 
+    public void leaveARoom(long userId, long roomId){
+        User user = userService.getUserById(userId);
+        Room room = roomRepository.findById(roomId);
+        room.getPlayers().remove(user);
+        user.setRoom(null);
+        System.out.println("----------room players----------");
+        roomRepository.save(room);
+
+    }
+
 }
 
 
