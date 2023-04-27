@@ -46,9 +46,16 @@ public class RoomController {
         for(int i = 0; i<allRooms.size(); i++){
             roomList.add(DTOMapper.INSTANCE.convertEntityToRoomGetDTO((Room) allRooms.get(i)));
         }
-
-
         return roomList;
+    }
+
+
+    @GetMapping("/undercover/rooms/{roomId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public RoomGetDTO findARoomUndercover(@PathVariable("roomId") long roomId) throws IOException, SQLException{
+        Room room = roomService.getARoom(roomId);
+        return DTOMapper.INSTANCE.convertEntityToRoomGetDTO(room);
     }
 
 

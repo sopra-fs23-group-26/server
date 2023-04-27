@@ -41,11 +41,11 @@ public class RoomService {
     }
 
     public Room createRoom(Room newRoom){
-        newRoom.setName(UUID.randomUUID().toString().substring(0, 5));// 创建的时候会随机生成一个名字，然后用户可以自己改到时候
+//        newRoom.setName(UUID.randomUUID().toString().substring(0, 5));// 创建的时候会随机生成一个名字，然后用户可以自己改到时候
         newRoom.setGameName(newRoom.getGameName());
         newRoom.setOwnerId(newRoom.getOwnerId());
         User newUser = userService.getUserById(newRoom.getOwnerId());
-
+        newRoom.setName(newUser.getUsername()+"'s room");
         newUser.setRoom(newRoom);
         newRoom.getPlayers().add(newUser);
 
@@ -68,6 +68,11 @@ public class RoomService {
 
     }
 
+    public Room getARoom(long roomId){
+        Room room = roomRepository.findById(roomId);
+        return room;
+    }
+
 
 
     public void joinARoom(long userId, long roomId){
@@ -79,6 +84,7 @@ public class RoomService {
         room.getPlayers().add(newUser);
         newUser.setRoom(room);
         roomRepository.save(room);
+        roomRepository.flush();
     }
 
     public void leaveARoom(long userId, long roomId){
@@ -88,6 +94,7 @@ public class RoomService {
         user.setRoom(null);
         System.out.println("----------room players----------");
         roomRepository.save(room);
+        roomRepository.flush();
 
     }
 
