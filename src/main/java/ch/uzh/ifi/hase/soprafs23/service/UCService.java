@@ -59,7 +59,9 @@ public class UCService {
         undercover.setUndercover(true);
         undercover.setWord(wordSet.getUndercoverWord());
         undercover.setVoted(false);
+        undercover.setVotes(0);
         userRepository.save(undercover);
+
 
         //set others to be detective
         for (int i = 0; i < players.size(); i++) {
@@ -67,6 +69,7 @@ public class UCService {
                 players.get(i).setUndercover(false);
                 players.get(i).setWord(wordSet.getDetectiveWord());
                 players.get(i).setVoted(false);
+                players.get(i).setVotes(0);
                 userRepository.save(players.get(i));
             }
         }
@@ -252,11 +255,8 @@ public class UCService {
                 notOutPlayersNum = notOutPlayersNum + 1;
                 totalVotes = totalVotes + user.getVotes();
             }
-            if (notOutPlayersNum == totalVotes){
-                return true;
-            }
         }
-        return false;
+        return notOutPlayersNum == totalVotes;
     }
 
     public List<User> getOutUsers(GameUndercover gameUndercover) {
