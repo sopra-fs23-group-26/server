@@ -64,6 +64,10 @@ public class UserService {
   private void checkEmptyString(String string, String message) {
     if(string.trim().isEmpty()){
       throw new ResponseStatusException(HttpStatus.CONFLICT, message + " cannot be empty space.");
+    } 
+    
+    if(message.equals("username") && string.length() >= 15) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, message + " should be reduced to within 14 characters.");
     }
   }
 

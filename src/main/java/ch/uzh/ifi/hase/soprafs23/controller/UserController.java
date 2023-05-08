@@ -84,6 +84,8 @@ public class UserController {
     }
     if (username == null || username.compareTo("null") == 0) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username cannot be null!");
+    } else if (username.length() >= 15) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username should be less than 15 characters!");
     } else {
       updateUserInfo.setUsername(username);
     }
@@ -223,6 +225,41 @@ public class UserController {
     userService.validateInvitedUserName(username);
 
   }
+
+  @GetMapping("/globalranking")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public List<UserGetDTO> getGlobalranking() {
+    List<User> users = userService.getUsers();
+    Collections.sort(users, Comparator.comparing(User::getScore).reversed());
+    List<UserGetDTO> userGetDTOs = new ArrayList<>();
+    int rank = 1;
+    for (User user : users) {
+      user.setGlobalRanking(rank);
+      rank++;
+      userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
+    }
+    return userGetDTOs;   //print userGetDTO objects in the page
+  }
+
+  @GetMapping("/communityranking/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public List<UserGetDTO> getCommunityranking(@PathVariable("id") long id) {
+    User user = userService.getUserById(id);
+    List<User> community = user.getFriends();
+    community.add(user);
+    Collections.sort(community, Comparator.comparing(User::getScore).reversed());
+    List<UserGetDTO> userGetDTOs = new ArrayList<>();
+    int rank = 1;
+    for (User fellow : community) {
+      fellow.setGlobalRanking(rank);
+      rank++;
+      userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(fellow));
+    }
+    return userGetDTOs;   //print userGetDTO objects in the page
+  }
+
 }
 
 
