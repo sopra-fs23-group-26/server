@@ -58,6 +58,7 @@ public class User implements Serializable {
   private String description;
 
   @ManyToMany
+  @JsonIgnore
   @JoinTable(name = "friends",
           joinColumns = @JoinColumn(name = "user_id"),
           inverseJoinColumns = @JoinColumn(name = "friend_id"))

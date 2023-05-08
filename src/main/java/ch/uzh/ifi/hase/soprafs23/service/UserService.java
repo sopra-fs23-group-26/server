@@ -141,6 +141,23 @@ public class UserService {
       user1.getFriends().remove(user2);
       userRepository.save(user1);
     }
+  }
+
+
+
+  public void validateInvitedUserName(String username){
+    User invitedUser = userRepository.findByUsername(username);
+    System.out.println("inviting func");
+    System.out.println(invitedUser);
+    if(invitedUser==null){
+      System.out.println("no invitedUser");
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "no user called "+username);
+    }
+
+    if (invitedUser.getRoom()!=null){
+      System.out.println("invitedUser in a room");
+      throw new ResponseStatusException(HttpStatus.CONFLICT, username+" has been in a room");
+    }
 
   }
 }

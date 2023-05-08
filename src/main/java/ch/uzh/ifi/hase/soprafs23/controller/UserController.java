@@ -212,4 +212,17 @@ public class UserController {
     }
     userService.addFriend(user1, user2, addFriendStatus); //addFriendStatus = 1(add friend), 2(accept friend), 3(reject friend)
   }
+
+
+
+  @PostMapping("/users/{username}")
+  @ResponseBody
+  public void validateInvitedUserName(@PathVariable String username){
+    System.out.println("inviting");
+    System.out.println(username);
+    userService.validateInvitedUserName(username);
+
+  }
 }
+
+

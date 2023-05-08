@@ -43,29 +43,57 @@ public class RoomService {
     public Room createRoom(Room newRoom){
 //        newRoom.setName(UUID.randomUUID().toString().substring(0, 5));// 创建的时候会随机生成一个名字，然后用户可以自己改到时候
         try{
-        newRoom.setGameName(newRoom.getGameName());
-        newRoom.setOwnerId(newRoom.getOwnerId());
-        User newUser = userService.getUserById(newRoom.getOwnerId());
-        newRoom.setName(newUser.getUsername()+"'s room");
-        newUser.setRoom(newRoom);
-        newRoom.getPlayers().add(newUser);
+            checkIfRoomExists(newRoom.getName());
+            System.out.println("creating a room 1");
+            newRoom.setGameName(newRoom.getGameName());
+            System.out.println("creating a room 2");
+            newRoom.setOwnerId(newRoom.getOwnerId());
+            System.out.println("creating a room 3");
+            newRoom.setName(newRoom.getName());
+            System.out.println("creating a room 4");
+            User newUser = userService.getUserById(newRoom.getOwnerId());
+            System.out.println("creating a room 5");
 
-        newRoom = (Room) roomRepository.save(newRoom);
-        roomRepository.flush();
+            newUser.setRoom(newRoom);
+            System.out.println("creating a room 6");
+            newRoom.getPlayers().add(newUser);
+            System.out.println("creating a room 7");
 
-        log.info("Created Information for Room: {}", newRoom);
-        System.out.println("newroomid: "+newRoom.getId());
-        return newRoom;}
+            System.out.println("creating a room  ROOOMMMM");
+            System.out.println(newRoom);
+
+            newRoom = (Room) roomRepository.save(newRoom);
+            System.out.println("creating a room 8");
+            roomRepository.flush();
+            System.out.println("creating a room 9");
+
+            log.info("Created Information for Room: {}", newRoom);
+            System.out.println("newroomid: "+newRoom.getId());
+            return newRoom;
+        }
         catch(Exception e){
+            System.out.println("creating a room exception");
+            System.out.println(e);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "a room with the same has been created", e);
         }
-
     }
 
-//        else {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "no such user, cant create a new room") ;
-//        }
-//    }
+
+    private void checkIfRoomExists(String name){
+        System.out.println("name");
+        System.out.println(name);
+        Room room = roomRepository.findByName(name);
+        System.out.println("creating a room");
+        System.out.println(room);
+        if(room!=null){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "The room name provided is not unique. Please try a new name");
+        }
+    }
+
+
+
+
 
     public List<Room> getAllRooms(){
 
