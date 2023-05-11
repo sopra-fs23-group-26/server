@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs23.service;
 import ch.uzh.ifi.hase.soprafs23.constant.RoomStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
+import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,7 +21,9 @@ import java.util.*;
 public class RoomService {
 
     private final RoomRepository roomRepository;
-    private final UserService userService;
+
+
+    private final UserRepository userRepository;
 
 
 
@@ -29,9 +32,10 @@ public class RoomService {
     private final Logger log = LoggerFactory.getLogger(RoomService.class);
 
     @Autowired
-    public RoomService(@Qualifier("roomRepository")RoomRepository roomRepository, UserService userService) {
+    public RoomService(@Qualifier("roomRepository")RoomRepository roomRepository, UserRepository userRepository) {
         this.roomRepository = roomRepository;
-        this.userService = userService;
+
+        this.userRepository = userRepository;
     }
 
 
@@ -41,39 +45,23 @@ public class RoomService {
     }
 
     public Room createRoom(Room newRoom){
-//        newRoom.setName(UUID.randomUUID().toString().substring(0, 5));// 创建的时候会随机生成一个名字，然后用户可以自己改到时候
         try{
             checkIfRoomExists(newRoom.getName());
-            System.out.println("creating a room 1");
             newRoom.setGameName(newRoom.getGameName());
-            System.out.println("creating a room 2");
             newRoom.setOwnerId(newRoom.getOwnerId());
-            System.out.println("creating a room 3");
             newRoom.setName(newRoom.getName());
-            System.out.println("creating a room 4");
-            User newUser = userService.getUserById(newRoom.getOwnerId());
-            System.out.println("creating a room 5");
+            long ownerId = newRoom.getOwnerId();
+            User newUser = userRepository.findById(ownerId);
 
             newUser.setRoom(newRoom);
-            System.out.println("creating a room 6");
             newRoom.getPlayers().add(newUser);
-            System.out.println("creating a room 7");
-
-            System.out.println("creating a room  ROOOMMMM");
-            System.out.println(newRoom);
 
             newRoom = (Room) roomRepository.save(newRoom);
-            System.out.println("creating a room 8");
             roomRepository.flush();
-            System.out.println("creating a room 9");
 
-            log.info("Created Information for Room: {}", newRoom);
-            System.out.println("newroomid: "+newRoom.getId());
             return newRoom;
         }
         catch(Exception e){
-            System.out.println("creating a room exception");
-            System.out.println(e);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A room with the same has been created.", e);
         }
     }
@@ -107,7 +95,7 @@ public class RoomService {
 
 
     public void joinARoom(long userId, long roomId){
-        User newUser = userService.getUserById(userId);
+        User newUser = userRepository.findById(userId);
         Room room = roomRepository.findById(roomId);
         if(room.getRoomStatus()== RoomStatus.inGame){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "The game has already started.");
@@ -119,7 +107,7 @@ public class RoomService {
     }
 
     public void leaveARoom(long userId, long roomId){
-        User user = userService.getUserById(userId);
+        User user = userRepository.findById(userId);
         Room room = roomRepository.findById(roomId);
         room.getPlayers().remove(user);
         user.setRoom(null);
