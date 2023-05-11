@@ -20,6 +20,7 @@ import java.util.*;
 
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 public class UserServiceTest {
@@ -333,6 +334,28 @@ public class UserServiceTest {
     }
 
 
+
+    @Test
+    public void testUpdateAllFields() {
+        // Arrange
+        User userToBeUpdated = new User();
+        userToBeUpdated.setUsername("L");
+        userToBeUpdated.setPassword("p1");
+        userToBeUpdated.setImage("old");
+        User updateUserInfo = new User();
+        updateUserInfo.setUsername("J");
+        updateUserInfo.setPassword("p1");
+        updateUserInfo.setImage("new");
+        when(userRepository.findByUsername(updateUserInfo.getUsername())).thenReturn(null);
+
+        // Act
+        userService.update(userToBeUpdated, updateUserInfo);
+
+        // Assert
+        assertEquals(userToBeUpdated.getUsername(), updateUserInfo.getUsername());
+        assertEquals(userToBeUpdated.getPassword(), updateUserInfo.getPassword());
+        assertEquals(userToBeUpdated.getImage(), updateUserInfo.getImage());
+    }
 
 
 
