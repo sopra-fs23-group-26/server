@@ -22,22 +22,16 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
     List<Room> findAll();
 
+    void delete(Room room);
 
-//    @Query("SELECT r FROM Room r WHERE r.id = :id")
-//    Room findRoomByRoomId(@Param("id") long id);
-//
-//    @Query("SELECT r.players FROM Room r WHERE r.id = :id")
-//    Set<User> findAllPlayersByRoomId(@Param("id") long id);
-//
-//
-//    @Query("SELECT r.ownerId FROM Room r WHERE r.id = :id")
-//    Long findOwnerIdByRoomId(@Param("id") long id);
+
 //
 //    @Modifying
-//    @Query("UPDATE Room r SET r.players = :players WHERE r.id = :id")
-//    void updatePlayersById(@Param("players") Set<User> players, @Param("id") Long id);
-
-
-
-
+//    @Transactional
+//    @Query("UPDATE User u SET u.room = :room WHERE u.id = :userId")
+//    void addUserToRoom(@Param("userId") long userId, @Param("room") Room room);
+//
+//
+//
+//
 }

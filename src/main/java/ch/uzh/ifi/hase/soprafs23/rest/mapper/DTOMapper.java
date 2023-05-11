@@ -55,7 +55,7 @@ public interface DTOMapper {
 
 
 //  @Mapping(source = "id", target = "id")// 创建房间的时候没有id
-//  @Mapping(source = "name", target = "name")// 页面上现在没有创建的时候输入名字
+  @Mapping(source = "name", target = "name")
   @Mapping(source = "gameName", target = "gameName")
 //  @Mapping(source = "players", target = "players") //创建房间的时候只有owner一个人。感觉不需要传players，只用传userid过来，然后
 //  // 再到数据库里面查看
