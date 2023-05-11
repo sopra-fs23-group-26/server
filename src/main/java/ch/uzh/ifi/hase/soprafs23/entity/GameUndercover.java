@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
+import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -57,6 +58,7 @@ public class GameUndercover implements Serializable {
     public String getCurrentPlayerUsername() {
         return currentPlayerUsername;
     }
+
 
     public void setCurrentPlayerUsername(String currentPlayerUsername) {
         this.currentPlayerUsername = currentPlayerUsername;

@@ -8,6 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 //import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
 @RestController
@@ -35,4 +38,13 @@ public class Application {
       }
     };
   }
+
+
+  @Bean
+  public ScheduledExecutorService scheduledExecutorService() {
+    return Executors.newScheduledThreadPool(1);
+  }
+
+
+
 }

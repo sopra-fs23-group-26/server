@@ -36,4 +36,15 @@ public class GameHistoryService {
         }
     }
 
+
+
+    public List<GameHistory> getGameHistory(User user) {
+        List<GameHistory> historyList = gameHistoryRepository.findByUsername(user.getUsername());
+        if (!historyList.isEmpty()) {
+            return historyList;
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find this user's game history!");
+        }
+    }
+
 }

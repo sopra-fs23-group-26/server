@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 public class GameHistoryController {
     private final GameHistoryService gameHistoryService;
@@ -29,6 +31,17 @@ public class GameHistoryController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find user!");
         }
         return gameHistoryService.getLatestGameHistory(user);
+    }
+
+    @GetMapping("/gameHistory/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<GameHistory> getHistory(@PathVariable("userId") long userId){
+        User user = userService.getUserById(userId);
+        if(user==null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find user!");
+        }
+        return gameHistoryService.getGameHistory(user);
     }
 
 

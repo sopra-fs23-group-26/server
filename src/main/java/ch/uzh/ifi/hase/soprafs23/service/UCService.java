@@ -19,6 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
@@ -86,6 +90,8 @@ public class UCService {
         undercoverRepository.flush();
         room.setGameUndercover(gameUndercover);
         log.debug("Created Information for game: {}", gameUndercover);
+//        scheduler = Executors.newSingleThreadScheduledExecutor();
+//        startDescribeScheduler(gameUndercover, userlist.get(0));
         return gameUndercover;
     }
 
@@ -129,7 +135,7 @@ public class UCService {
         return gameUndercover;
     }
 
-    private void gameEndsSetting(GameUndercover gameUndercover) {
+    public void gameEndsSetting(GameUndercover gameUndercover) {
         // first set the game status to "gameEnd"
         gameUndercover.setGameStatus(GameStatus.gameEnd);
 
@@ -165,6 +171,7 @@ public class UCService {
             user.setUndercover(false);
             user.setVotes(0);
         }
+        undercoverRepository.save(gameUndercover);
 
         // clear the room
 
@@ -203,11 +210,43 @@ public class UCService {
         return undercoverRepository.findById(gameId);
     }
 
+
+//
+//    private ScheduledExecutorService scheduler;
+//    private ScheduledFuture<?> describeFuture;
+//
+//    public void startDescribeScheduler(GameUndercover gameUndercover, User finishedUser) {
+//        // cancel the previous scheduled task, if any
+//        if (describeFuture != null) {
+//            describeFuture.cancel(false);
+//        }
+//
+//        // schedule the describe function to be called after 1 minute, and then every 1 minute
+//        describeFuture = scheduler.scheduleAtFixedRate(() -> {
+//            describe(gameUndercover, finishedUser);
+//        }, 1, 1, TimeUnit.MINUTES);
+//    }
+//
+//    public void stopDescribeScheduler() {
+//        // stop the scheduled executor service
+//        scheduler.shutdown();
+//    }
+
     /*first check if the current player is the last one,
     * if true, set the game status to voting and reset current player,
     * if false, set the current player to next one
+    *
+    *
     */
+
+
+
+    private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+
     public GameUndercover describe(GameUndercover gameUndercover, User finishedUser) {
+
+        System.out.println("            "+gameUndercover.getId()+"        "+finishedUser.getId());
 
         //check if finished user is the last element of alivePlayers;
         //boolean ifRoundEnd = ifRoundEnd(gameUndercover, finishedUser);
@@ -241,24 +280,13 @@ public class UCService {
             }
         }
 
-        if(ifRoundEnd){
+        if (ifRoundEnd) {
             gameUndercover.setGameStatus(GameStatus.voting);
+            scheduler.schedule(() -> {
+                System.out.println("two minutes");
+                gameEndsSetting(gameUndercover);
+            }, 2, TimeUnit.MINUTES);
         }
-        //if false, set the current player to the next one
-//        else{
-//            for (User user : userlist) {
-//                if (Objects.equals(user.getUsername(), currentPlayerUsername)) {
-//                    // Found the current player, continue iterating to find the next non-voted player.
-//                    continue;
-//                }
-//
-//                if (!user.isVoted()) {
-//                    // Found a non-voted player after the current player, update currentPlayerId and break out of the loop.
-//                    gameUndercover.setCurrentPlayerUsername(user.getUsername());
-//                    break;
-//                }
-//            }
-//        }
         undercoverRepository.save(gameUndercover);
         return gameUndercover;
     }
@@ -351,5 +379,11 @@ public class UCService {
         gameHistoryRepository.save(gameHistory);
         gameHistoryRepository.flush();
     }
+
+    public User getCurrentPlayer(String name){
+        User user=userRepository.findByUsername(name);
+        return user;
+    }
+
 
 }

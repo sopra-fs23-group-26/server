@@ -1,17 +1,29 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
 
+import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.GameUndercover;
 import ch.uzh.ifi.hase.soprafs23.entity.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.service.RoomService;
 import ch.uzh.ifi.hase.soprafs23.service.UCService;
 import ch.uzh.ifi.hase.soprafs23.service.UserService;
+import ch.uzh.ifi.hase.soprafs23.websocket.WebSocketMessageHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 public class GameUnderCoverController {
@@ -50,12 +62,11 @@ public class GameUnderCoverController {
         }
         GameUndercover gameundercover= ucService.createGame(room);
         System.out.println("------------gameInput------------");
+        startDescribeScheduler(gameundercover);
         return gameundercover;
     }
 
-    /*
-    * when a user ends his/her description, call this put method to set currentPlayer to the next user
-    * or if all users have finished, set the game status to voting.*/
+
     @PutMapping("/undercover/{gameId}/users/{userId}/description")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -66,6 +77,39 @@ public class GameUnderCoverController {
         gameUndercover=ucService.describe(gameUndercover, describedUser);
         return gameUndercover;
     }
+
+
+    @Autowired
+    private ScheduledExecutorService scheduler;
+    private ScheduledFuture<?> scheduledFuture;
+    private final long delay = 1; // 初始延迟时间为1分钟
+    private final long period = 1; // 每隔1分钟执行一次
+
+    private void startDescribeScheduler(final GameUndercover scheduledGame) {
+        if (scheduledFuture == null || scheduledFuture.isDone()) {
+            scheduledFuture = scheduler.scheduleAtFixedRate(() -> {
+                System.out.println("schedule");
+                GameUndercover game = ucService.getGameById(scheduledGame.getId());
+                if (game.getGameStatus() != GameStatus.describing) {
+                    scheduledFuture.cancel(false);
+                } else {
+                    ucService.describe(scheduledGame, ucService.getCurrentPlayer(scheduledGame.getCurrentPlayerUsername()));
+                }
+            }, delay, period, TimeUnit.MINUTES);
+        } else {
+            scheduledFuture.cancel(false);
+            scheduledFuture = scheduler.scheduleAtFixedRate(() -> {
+                System.out.println("schedule");
+                GameUndercover game = ucService.getGameById(scheduledGame.getId());
+                if (game.getGameStatus() != GameStatus.describing) {
+                    scheduledFuture.cancel(false);
+                } else {
+                    ucService.describe(scheduledGame, ucService.getCurrentPlayer(scheduledGame.getCurrentPlayerUsername()));
+                }
+            }, delay, period, TimeUnit.MINUTES);
+        }
+    }
+
 
     /*
     * when a round of voting finished, use this put mapping

@@ -40,5 +40,11 @@ public class WebSocketMessageHandler extends TextWebSocketHandler {
         sessions.remove(session);
 //        System.out.println("WebSocket disconnected: " + session.getId());
     }
+
+
+
+    public Set<WebSocketSession> getSessions() {
+        return sessions;
+    }
 }
 

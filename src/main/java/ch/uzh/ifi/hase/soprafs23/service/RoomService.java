@@ -74,7 +74,7 @@ public class RoomService {
         catch(Exception e){
             System.out.println("creating a room exception");
             System.out.println(e);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "a room with the same has been created", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A room with the same has been created.", e);
         }
     }
 
@@ -90,10 +90,6 @@ public class RoomService {
                     "The room name provided is not unique. Please try a new name");
         }
     }
-
-
-
-
 
     public List<Room> getAllRooms(){
 
