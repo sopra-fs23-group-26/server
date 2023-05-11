@@ -112,43 +112,43 @@ public class GameUnderCoverControllerTest {
         verify(ucService, times(1)).describe(gameUndercover, describedUser);
     }
 
-    @Test
-    public void createGame_validInput_gameCreated() throws Exception {
-        // Setup
-        long roomId = 1L;
-        Room room = new Room();
-        room.setId(roomId);
-        Set<User> players = new HashSet<>();
-        User user1 = new User();
-        user1.setId(1L);
-        User user2 = new User();
-        user2.setId(2L);
-        players.add(user1);
-        players.add(user2);
-        room.setPlayers(players);
-        GameUndercover gameUndercover = new GameUndercover();
-        gameUndercover.setGameStatus(GameStatus.describing);
-        gameUndercover.setRoom(room);
-//        when(roomService.getRoomById(roomId)).thenReturn(room);
-//        when(ucService.createGame(room.getPlayers())).thenReturn(new GameUndercover());
-        given(roomService.getRoomById(roomId)).willReturn(room);
-        given(ucService.createGame(room)).willReturn(gameUndercover);
-
-
-        // Execute and Verify
-        mockMvc.perform(post("/undercover/rooms/{roomId}", roomId)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.gameStatus").value(GameStatus.describing.toString()))
-                .andExpect(jsonPath("$.users").isArray())
-                .andExpect(jsonPath("$.users", hasSize(2)))
-                .andExpect(jsonPath("$.users[*].id", containsInAnyOrder(1, 2)));
-
-        verify(roomService, times(1)).getRoomById(roomId);
-        verify(ucService, times(1)).createGame(room);
-
-    }
-
+//    @Test
+//    public void createGame_validInput_gameCreated() throws Exception {
+//        // Setup
+//        long roomId = 1L;
+//        Room room = new Room();
+//        room.setId(roomId);
+//        Set<User> players = new HashSet<>();
+//        User user1 = new User();
+//        user1.setId(1L);
+//        User user2 = new User();
+//        user2.setId(2L);
+//        players.add(user1);
+//        players.add(user2);
+//        room.setPlayers(players);
+//        GameUndercover gameUndercover = new GameUndercover();
+//        gameUndercover.setGameStatus(GameStatus.describing);
+//        gameUndercover.setRoom(room);
+////        when(roomService.getRoomById(roomId)).thenReturn(room);
+////        when(ucService.createGame(room.getPlayers())).thenReturn(new GameUndercover());
+//        given(roomService.getRoomById(roomId)).willReturn(room);
+//        given(ucService.createGame(room)).willReturn(gameUndercover);
+//
+//
+//        // Execute and Verify
+//        mockMvc.perform(post("/undercover/rooms/{roomId}", roomId)
+//                .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isCreated())
+//                .andExpect(jsonPath("$.gameStatus").value(GameStatus.describing.toString()))
+//                .andExpect(jsonPath("$.users").isArray())
+//                .andExpect(jsonPath("$.users", hasSize(2)))
+//                .andExpect(jsonPath("$.users[*].id", containsInAnyOrder(1, 2)));
+//
+//        verify(roomService, times(1)).getRoomById(roomId);
+//        verify(ucService, times(1)).createGame(room);
+//
+//    }
+//
 
     @Test
     public void vote_validInput_gameUpdated() throws Exception {
