@@ -240,7 +240,205 @@ class UCServiceTest {
     }
 
 
+    @Test
+    void testGameEndsSettingUndercoverWin(){
+        Set<User> users = new HashSet<>();
+        User user1 = new User();
+        user1.setUsername("user1");
+        user1.setVoted(true);
+        user1.setUndercover(false);
+        user1.setWord("word1");
 
 
+        User user2 = new User();
+        user2.setUsername("user2");
+        user2.setVoted(false);
+        user2.setUndercover(true);// under cover
+        user2.setWord("word2");
 
+        users.add(user1);
+        users.add(user2);
+
+        Room room = new Room();
+        room.setPlayers(users);
+
+        GameUndercover gameUndercover = new GameUndercover();
+        gameUndercover.setRoom(room);
+
+        gameUndercover.setGameStatus(GameStatus.describing);
+        undercoverRepository.save(gameUndercover);
+
+        ucService.gameEndsSetting(gameUndercover);
+
+        assertNull(user1.getWord());
+        assertEquals(false, user1.isVoted());
+        assertEquals(false, user2.isUndercover());
+        assertEquals(GameStatus.gameEnd, gameUndercover.getGameStatus());
+
+    }
+
+    @Test
+    void testGameEndsSettingUndercoverLose(){
+        Set<User> users = new HashSet<>();
+        User user1 = new User();
+        user1.setUsername("user1");
+        user1.setVoted(false);
+        user1.setUndercover(false);
+        user1.setWord("word1");
+
+
+        User user2 = new User();
+        user2.setUsername("user2");
+        user2.setVoted(true);
+        user2.setUndercover(true);// under cover
+        user2.setWord("word2");
+
+        users.add(user1);
+        users.add(user2);
+
+        Room room = new Room();
+        room.setPlayers(users);
+
+        GameUndercover gameUndercover = new GameUndercover();
+        gameUndercover.setRoom(room);
+
+        gameUndercover.setGameStatus(GameStatus.describing);
+        undercoverRepository.save(gameUndercover);
+
+        ucService.gameEndsSetting(gameUndercover);
+
+        assertNull(user1.getWord());
+        assertEquals(false, user2.isVoted());
+        assertEquals(false, user2.isUndercover());
+        assertEquals(GameStatus.gameEnd, gameUndercover.getGameStatus());
+
+    }
+
+
+   @Test
+    void testGetGameById(){
+       Set<User> users = new HashSet<>();
+       User user1 = new User();
+       user1.setUsername("user1");
+       user1.setVoted(true);
+       user1.setUndercover(false);
+       user1.setWord("word1");
+
+
+       User user2 = new User();
+       user2.setUsername("user2");
+       user2.setVoted(false);
+       user2.setUndercover(true);// under cover
+       user2.setWord("word2");
+
+       users.add(user1);
+       users.add(user2);
+
+       Room room = new Room();
+       room.setPlayers(users);
+
+       GameUndercover gameUndercover = new GameUndercover();
+       gameUndercover.setRoom(room);
+
+       gameUndercover.setGameStatus(GameStatus.describing);
+       undercoverRepository.save(gameUndercover);
+
+       ucService.gameEndsSetting(gameUndercover);
+
+       when(undercoverRepository.findById(anyLong())).thenReturn(gameUndercover);
+
+       assertEquals(gameUndercover, ucService.getGameById(anyLong()));
+
+
+   }
+
+   @Test
+    void testVoteAndCheckIfEndsTrue(){
+
+       Set<User> users = new HashSet<>();
+       User user1 = new User();
+       user1.setUsername("user1");
+       user1.setVoted(false);
+       user1.setUndercover(false);
+       user1.setWord("word1");
+       user1.setVotes(1);
+
+
+       User user2 = new User();
+       user2.setUsername("user2");
+       user2.setVoted(false);
+       user2.setUndercover(true);// under cover
+       user2.setWord("word2");
+
+       users.add(user1);
+       users.add(user2);
+
+       Room room = new Room();
+       room.setPlayers(users);
+
+       GameUndercover gameUndercover = new GameUndercover();
+       gameUndercover.setRoom(room);
+
+       gameUndercover.setGameStatus(GameStatus.describing);
+       undercoverRepository.save(gameUndercover);
+
+       assertEquals(true, ucService.voteAndCheckIfEnds(gameUndercover, user1));
+   }
+
+
+   @Test
+    void testGetOutUsers(){
+       Set<User> users = new HashSet<>();
+       User user1 = new User();
+       user1.setUsername("user1");
+       user1.setVoted(false);
+       user1.setUndercover(false);
+       user1.setWord("word1");
+       user1.setVotes(2);
+
+
+       User user2 = new User();
+       user2.setUsername("user2");
+       user2.setVoted(false);
+       user2.setUndercover(true);// under cover
+       user2.setWord("word2");
+       user2.setVotes(0);
+
+       users.add(user1);
+       users.add(user2);
+
+       Room room = new Room();
+       room.setPlayers(users);
+
+       GameUndercover gameUndercover = new GameUndercover();
+       gameUndercover.setRoom(room);
+
+       gameUndercover.setGameStatus(GameStatus.describing);
+       undercoverRepository.save(gameUndercover);
+
+       List<User> result = new ArrayList<>();
+       result.add(user1);
+       assertEquals(result, ucService.getOutUsers(gameUndercover));
+   }
+
+
+   @Test
+    void testGetCurrentPlayer(){
+       User user1 = new User();
+       user1.setUsername("user1");
+       user1.setVoted(false);
+       user1.setUndercover(false);
+       user1.setWord("word1");
+       user1.setVotes(2);
+
+       when(userRepository.findByUsername(anyString())).thenReturn(user1);
+
+       assertEquals(ucService.getCurrentPlayer(anyString()), user1);
+   }
+
+   @Test
+    void testCreateGameHistory(){
+        ucService.createGameHistory("undercover", "user1", "point2", "W");
+        assertNotNull(gameHistoryRepository.findByUsername("user1"));
+   }
 }

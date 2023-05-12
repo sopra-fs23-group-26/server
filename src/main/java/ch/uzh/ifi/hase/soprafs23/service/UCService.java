@@ -292,40 +292,40 @@ public class UCService {
     }
 
     //check if finished user is the last who is not out in the players set
-    private boolean ifRoundEnd(GameUndercover gameUndercover, User finishedUser) {
-        boolean isLastUserWithFalseVote = true;
-
-        Set<User> users = gameUndercover.getUsers();
-
-
-        List<User> userlist = new ArrayList<>(users);
-        Collections.sort(userlist, new Comparator<User>() {
-            public int compare(User u1, User u2) {
-                return Long.compare(u1.getId(), u2.getId());
-            }
-        });
-        Iterator<User> it = userlist.iterator();
-
-
-
-        // first find the current player
-        while (it.hasNext()) {
-            User currentUser = it.next();
-            if (currentUser == finishedUser) {
-                break;
-            }
-        }
-
-        // then verify if players after him is out
-        while(it.hasNext()){
-            User currentUser = it.next();
-            if (!currentUser.isVoted()){
-                isLastUserWithFalseVote = false;
-            }
-        }
-
-        return isLastUserWithFalseVote;
-    }
+//    private boolean ifRoundEnd(GameUndercover gameUndercover, User finishedUser) {
+//        boolean isLastUserWithFalseVote = true;
+//
+//        Set<User> users = gameUndercover.getUsers();
+//
+//
+//        List<User> userlist = new ArrayList<>(users);
+//        Collections.sort(userlist, new Comparator<User>() {
+//            public int compare(User u1, User u2) {
+//                return Long.compare(u1.getId(), u2.getId());
+//            }
+//        });
+//        Iterator<User> it = userlist.iterator();
+//
+//
+//
+//        // first find the current player
+//        while (it.hasNext()) {
+//            User currentUser = it.next();
+//            if (currentUser == finishedUser) {
+//                break;
+//            }
+//        }
+//
+//        // then verify if players after him is out
+//        while(it.hasNext()){
+//            User currentUser = it.next();
+//            if (!currentUser.isVoted()){
+//                isLastUserWithFalseVote = false;
+//            }
+//        }
+//
+//        return isLastUserWithFalseVote;
+//    }
 
 
 
