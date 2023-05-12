@@ -27,10 +27,10 @@ public class GameSudokuController {
     }
 
 
-    @GetMapping("/sudoku/create")
+    @GetMapping("/sudoku/create/{requiredDifficulty}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public String[][] getQuestion(@RequestBody String requiredDifficulty) {
+    public String[][] getQuestion(@PathVariable("requiredDifficulty") String requiredDifficulty) {
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -46,11 +46,13 @@ public class GameSudokuController {
         return value;
     }
 
+
+
     //if the answer is correct, return true
     @PutMapping("/sudoku/validation/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Boolean validateAnswer(@PathVariable("userId") long userId, @RequestBody String[][] answer, String difficulty){
+    public Boolean validateAnswer(@PathVariable("userId") long userId, @RequestBody String[][] answer, @RequestParam(required = false) String difficulty){
         Boolean IsPass = isValidSudoku(answer);
         if(IsPass){
             User user = userService.getUserById(userId);
