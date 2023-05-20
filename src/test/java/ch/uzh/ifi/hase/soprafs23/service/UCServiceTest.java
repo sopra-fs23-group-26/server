@@ -128,6 +128,8 @@ class UCServiceTest {
         game.setGameStatus(GameStatus.describing);
         game.setRoom(room);
         room.setGameUndercover(game);
+        game.setId(1L);
+        undercoverRepository.save(game);
 
         // Vote off the undercover player
         List<User> votedUsers = new ArrayList<>();
@@ -254,8 +256,11 @@ class UCServiceTest {
 
         GameUndercover gameUndercover = new GameUndercover();
         gameUndercover.setRoom(room);
+        gameUndercover.setId(1L);
 
         gameUndercover.setGameStatus(GameStatus.describing);
+        undercoverRepository.save(gameUndercover);
+        gameUndercover.setId(1L);
         undercoverRepository.save(gameUndercover);
 
         ucService.gameEndsSetting(gameUndercover);
@@ -293,6 +298,8 @@ class UCServiceTest {
         gameUndercover.setRoom(room);
 
         gameUndercover.setGameStatus(GameStatus.describing);
+        undercoverRepository.save(gameUndercover);
+        gameUndercover.setId(1L);
         undercoverRepository.save(gameUndercover);
 
         ucService.gameEndsSetting(gameUndercover);
@@ -333,7 +340,6 @@ class UCServiceTest {
        gameUndercover.setGameStatus(GameStatus.describing);
        undercoverRepository.save(gameUndercover);
 
-       ucService.gameEndsSetting(gameUndercover);
 
        when(undercoverRepository.findById(anyLong())).thenReturn(gameUndercover);
 

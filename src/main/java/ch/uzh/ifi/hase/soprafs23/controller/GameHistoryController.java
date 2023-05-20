@@ -17,12 +17,10 @@ public class GameHistoryController {
 
     private final UserService userService;
 
-    private final UCService ucService;
 
-    GameHistoryController(GameHistoryService gameHistoryService, UserService userService, UCService ucService){
+    GameHistoryController(GameHistoryService gameHistoryService, UserService userService){
         this.gameHistoryService = gameHistoryService;
         this.userService = userService;
-        this.ucService=ucService;
     }
 
 

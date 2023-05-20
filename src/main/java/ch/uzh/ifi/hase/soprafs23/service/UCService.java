@@ -185,12 +185,14 @@ public class UCService {
 
     public void deleteAGame(long gameId){
         GameUndercover gameToDelete = undercoverRepository.findById(gameId);
-        Room room = gameToDelete.getRoom();
-        gameToDelete.setRoom(null);
-        room.setGameUndercover(null);
-        undercoverRepository.flush();
-        roomRepository.flush();
-        roomService.deleteARoom(room.getId());
+        if(gameToDelete!=null) {
+            Room room = gameToDelete.getRoom();
+            gameToDelete.setRoom(null);
+            room.setGameUndercover(null);
+            undercoverRepository.flush();
+            roomRepository.flush();
+            roomService.deleteARoom(room.getId());
+        }
 
     }
 
