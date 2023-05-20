@@ -59,11 +59,6 @@ public class GameUnderCoverController {
         if(room.getGameUndercover()!=null){
             return room.getGameUndercover();
 
-
-
-
-
-
         }
         GameUndercover gameundercover= ucService.createGame(room);
 
