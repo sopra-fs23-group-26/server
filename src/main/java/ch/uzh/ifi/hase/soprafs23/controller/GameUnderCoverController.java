@@ -61,11 +61,6 @@ public class GameUnderCoverController {
 
         }
         GameUndercover gameundercover= ucService.createGame(room);
-
-
-
-        System.out.println("------------gameInput------------");
-//        startDescribeScheduler(gameundercover);
         return gameundercover;
     }
 
@@ -88,32 +83,6 @@ public class GameUnderCoverController {
     private final long delay = 1;
     private final long period = 1;
 
-//    private void startDescribeScheduler(final GameUndercover scheduledGame) {
-//        if (scheduledFuture == null || scheduledFuture.isDone()) {
-//            scheduledFuture = scheduler.scheduleAtFixedRate(() -> {
-//                System.out.println("schedule");
-//                GameUndercover game = ucService.getGameById(scheduledGame.getId());
-//                if (game.getGameStatus() != GameStatus.describing) {
-//                    scheduledFuture.cancel(false);
-//
-//
-//                } else {
-//                    ucService.describe(scheduledGame, ucService.getCurrentPlayer(scheduledGame.getCurrentPlayerUsername()));
-//                }
-//            }, delay, period, TimeUnit.MINUTES);
-//        } else {
-//            scheduledFuture.cancel(false);
-//            scheduledFuture = scheduler.scheduleAtFixedRate(() -> {
-//                System.out.println("schedule");
-//                GameUndercover game = ucService.getGameById(scheduledGame.getId());
-//                if (game.getGameStatus() != GameStatus.describing) {
-//                    scheduledFuture.cancel(false);
-//                } else {
-//                    ucService.describe(scheduledGame, ucService.getCurrentPlayer(scheduledGame.getCurrentPlayerUsername()));
-//                }
-//            }, delay, period, TimeUnit.MINUTES);
-//        }
-//    }
 
 
     /*
