@@ -1,13 +1,37 @@
-# SoPra RESTful Service Template FS23
+<div align="center">
+    <h2>SoPra FS23 - Group 26 Server</h2>
+</div>
+
+# WeGame-Game Platform
+
+## Introduction
 
 
-## Getting started with Spring Boot
--   Documentation: https://docs.spring.io/spring-boot/docs/current/reference/html/index.html
--   Guides: http://spring.io/guides
-    -   Building a RESTful Web Service: http://spring.io/guides/gs/rest-service/
-    -   Building REST services with Spring: https://spring.io/guides/tutorials/rest/
+## Technologies
+- Java 
+- SpringBoot
+- JPA (with H2 database)
+- Github Actions
+- REST API
+- Datamuse API(external API)
+- Dosuku API(external API)
 
-## Setup this Template with your IDE of choice
+## High-Level Components
+The most important components are:
+- [User](src/main/java/ch/uzh/ifi/hase/soprafs23/entity/User.java)
+- [Room](src/main/java/ch/uzh/ifi/hase/soprafs23/entity/Room.java)
+- [GameUndercover](src/main/java/ch/uzh/ifi/hase/soprafs23/entity/GameUndercover.java)
+
+### User
+The user is one of the most important component in our project. A user could edit their profile, upload their image and add new friends. A user could also see his game history which is linked to username and also rankings among all users.
+
+### Room
+The room component is a base for multi-players game and it has the information of all players. After the room is created and ready, all players would be directed to the game start page. The room component is thus reusable for all multi-players game.
+
+### GameUndercover
+This component is an example that we write for illustrate the multi-players game idea. It is responsible for the logic of the game, for example the turn, time to vote and when the game ends.
+
+## Launch & Deployment
 Download your IDE of choice (e.g., [IntelliJ](https://www.jetbrains.com/idea/download/), [Visual Studio Code](https://code.visualstudio.com/), or [Eclipse](http://www.eclipse.org/downloads/)). Make sure Java 17 is installed on your system (for Windows, please make sure your `JAVA_HOME` environment variable is set to the correct version of Java).
 
 ### IntelliJ
@@ -68,20 +92,19 @@ If you want to avoid running all tests with every change, use the following comm
 
 `./gradlew build --continuous -xtest`
 
-## API Endpoint Testing with Postman
-We recommend using [Postman](https://www.getpostman.com) to test your API Endpoints.
 
-## Debugging
-If something is not working and/or you don't know what is going on. We recommend using a debugger and step-through the process step-by-step.
+## Roadmap
+Potential improvements or extensions in the future may include:
 
-To configure a debugger for SpringBoot's Tomcat servlet (i.e. the process you start with `./gradlew bootRun` command), do the following:
+- create chat room for the platform
+- introduce more game based on our game platform
 
-1. Open Tab: **Run**/Edit Configurations
-2. Add a new Remote Configuration and name it properly
-3. Start the Server in Debug mode: `./gradlew bootRun --debug-jvm`
-4. Press `Shift + F9` or the use **Run**/Debug "Name of your task"
-5. Set breakpoints in the application where you need it
-6. Step through the process one step at a time
+## Authors & Acknowledement
+>Jiewen Luo, Ruirui Wang, Heqing Ren & Jiajian Zhu
 
-## Testing
-Have a look here: https://www.baeldung.com/spring-boot-testing
+>SoPra Team for the template and our TA Valentin Hollenstein
+
+## License
+
+Licensed under GNU General Public License v3.0
+- See [License](LICENSE)
