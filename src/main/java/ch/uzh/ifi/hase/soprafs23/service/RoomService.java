@@ -95,6 +95,8 @@ public class RoomService {
 
 
     public void joinARoom(long userId, long roomId){
+        checkIfRoomFull(roomId);
+
         User newUser = userRepository.findById(userId);
         Room room = roomRepository.findById(roomId);
         if(room.getRoomStatus()== RoomStatus.inGame){
@@ -125,6 +127,15 @@ public class RoomService {
 
         roomRepository.delete(roomToDelete);
         roomRepository.flush();
+
+    }
+
+    public void checkIfRoomFull(long roomId){
+        Room room = roomRepository.findById(roomId);
+        Set<User> players = room.getPlayers();
+        if(players.size()>=8){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "There has been 8 player in this room");
+        }
 
     }
 
