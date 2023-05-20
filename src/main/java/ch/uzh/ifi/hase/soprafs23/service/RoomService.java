@@ -92,6 +92,11 @@ public class RoomService {
         return room;
     }
 
+    public long getUndercoverGameId(long roomId){
+        Room room = roomRepository.findById(roomId);
+        return room.getGameUndercover().getId();
+    }
+
 
 
     public void joinARoom(long userId, long roomId){

@@ -59,6 +59,16 @@ public class RoomController {
     }
 
 
+
+    @GetMapping("/undercover/getGameId/{roomId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public long getUndercoverId(@PathVariable("roomId") long roomId) throws IOException, SQLException{
+        return roomService.getUndercoverGameId(roomId);
+
+    }
+
+
     @PutMapping("/undercover/rooms/{roomId}/{userId}")
     @ResponseBody
     public RoomGetDTO joinARoom(@PathVariable("roomId") long roomId, @PathVariable("userId") long userId) throws IOException, SQLException{
