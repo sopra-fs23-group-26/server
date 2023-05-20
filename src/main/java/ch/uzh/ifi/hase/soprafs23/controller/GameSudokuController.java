@@ -43,16 +43,24 @@ public class GameSudokuController {
             value = response.getNewBoard().getGrids().get(0).getValue();
         }
 
+        for(int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if(value[i][j].compareTo("0") == 0) {
+                    value[i][j] = "";
+                }
+            }
+        }
+
         return value;
     }
 
 
 
     //if the answer is correct, return true
-    @PutMapping("/sudoku/validation/{userId}")
+    @PutMapping("/sudoku/validation/{userId}/{difficulty}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Boolean validateAnswer(@PathVariable("userId") long userId, @RequestBody String[][] answer, @RequestParam(required = false) String difficulty){
+    public Boolean validateAnswer(@PathVariable("userId") long userId, @RequestBody String[][] answer, @PathVariable("difficulty") String difficulty){
         Boolean IsPass = isValidSudoku(answer);
         if(IsPass){
             User user = userService.getUserById(userId);
