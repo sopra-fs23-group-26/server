@@ -8,6 +8,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.GameUndercover;
 import ch.uzh.ifi.hase.soprafs23.entity.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.repository.GameHistoryRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.RoomRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.UndercoverRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
 import org.slf4j.Logger;
@@ -30,15 +31,19 @@ public class UCService {
     private final Logger log = LoggerFactory.getLogger(UCService.class);
 
     private final UndercoverRepository undercoverRepository;
+    private final RoomRepository roomRepository;
 
     private final UserRepository userRepository;
+    private final RoomService roomService;
 
     private final GameHistoryRepository gameHistoryRepository;
     @Autowired
-    public UCService(@Qualifier("undercoverRepository") UndercoverRepository undercoverRepository, UserRepository userRepository,GameHistoryRepository gameHistoryRepository) {
+    public UCService(@Qualifier("undercoverRepository") UndercoverRepository undercoverRepository,RoomRepository roomRepository, RoomService roomService, UserRepository userRepository,GameHistoryRepository gameHistoryRepository) {
         this.undercoverRepository = undercoverRepository;
+        this.roomRepository=roomRepository;
         this.userRepository = userRepository;
         this.gameHistoryRepository = gameHistoryRepository;
+        this.roomService=roomService;
     }
 
 
@@ -173,7 +178,19 @@ public class UCService {
         }
         undercoverRepository.save(gameUndercover);
 
+        deleteAGame(gameUndercover.getId());
         // clear the room
+    }
+
+
+    public void deleteAGame(long gameId){
+        GameUndercover gameToDelete = undercoverRepository.findById(gameId);
+        Room room = gameToDelete.getRoom();
+        gameToDelete.setRoom(null);
+        room.setGameUndercover(null);
+        undercoverRepository.flush();
+        roomRepository.flush();
+        roomService.deleteARoom(room.getId());
 
     }
 

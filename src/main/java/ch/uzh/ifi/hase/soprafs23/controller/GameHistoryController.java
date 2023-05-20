@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs23.controller;
 import ch.uzh.ifi.hase.soprafs23.entity.GameHistory;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.service.GameHistoryService;
+import ch.uzh.ifi.hase.soprafs23.service.UCService;
 import ch.uzh.ifi.hase.soprafs23.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +17,12 @@ public class GameHistoryController {
 
     private final UserService userService;
 
-    GameHistoryController(GameHistoryService gameHistoryService, UserService userService){
+    private final UCService ucService;
+
+    GameHistoryController(GameHistoryService gameHistoryService, UserService userService, UCService ucService){
         this.gameHistoryService = gameHistoryService;
         this.userService = userService;
+        this.ucService=ucService;
     }
 
 

@@ -18,7 +18,7 @@ public class GameUndercover implements Serializable {
     @SequenceGenerator(name="undercover_seq", sequenceName = "UNDERCOVER_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="undercover_seq")
     private Long id;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "room_id")
     @JsonIgnore
     private Room room;
@@ -52,7 +52,8 @@ public class GameUndercover implements Serializable {
     }
 
     public Set<User> getUsers() {
-        return room.getPlayers();
+        if(room!=null) return room.getPlayers();
+        return null;
     }
 
     public String getCurrentPlayerUsername() {

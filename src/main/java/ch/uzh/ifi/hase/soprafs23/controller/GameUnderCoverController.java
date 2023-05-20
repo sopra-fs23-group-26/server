@@ -82,8 +82,8 @@ public class GameUnderCoverController {
     @Autowired
     private ScheduledExecutorService scheduler;
     private ScheduledFuture<?> scheduledFuture;
-    private final long delay = 1; // 初始延迟时间为1分钟
-    private final long period = 1; // 每隔1分钟执行一次
+    private final long delay = 1;
+    private final long period = 1;
 
     private void startDescribeScheduler(final GameUndercover scheduledGame) {
         if (scheduledFuture == null || scheduledFuture.isDone()) {
