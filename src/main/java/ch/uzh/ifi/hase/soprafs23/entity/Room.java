@@ -90,4 +90,6 @@ public class Room implements Serializable {
     public RoomStatus getRoomStatus(){return roomStatus;}
 
     public void setRoomStatus(RoomStatus roomStatus){this.roomStatus=roomStatus;}
+
+
 }
