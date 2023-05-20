@@ -58,8 +58,17 @@ public class GameUnderCoverController {
         Room room = roomService.getRoomById(roomId);
         if(room.getGameUndercover()!=null){
             return room.getGameUndercover();
+
+
+
+
+
+
         }
         GameUndercover gameundercover= ucService.createGame(room);
+
+
+
         System.out.println("------------gameInput------------");
 //        startDescribeScheduler(gameundercover);
         return gameundercover;
