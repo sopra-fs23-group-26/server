@@ -69,7 +69,7 @@ class GameSudokuControllerTest {
                 {".", ".", ".", ".", "8", ".", ".", "7", "9"}};
 
         // 构造PUT请求
-        MockHttpServletRequestBuilder requestBuilder = put("/sudoku/validation/1")
+        MockHttpServletRequestBuilder requestBuilder = put("/sudoku/validation/1/Medium")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(answer));
 
