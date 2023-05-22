@@ -26,6 +26,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -567,10 +568,11 @@ public class UserControllerTest {
         user1.setUsername("user 1");
         user1.setPassword("password");
 
-        Mockito.doNothing().when(userService).validateInvitedUserName(Mockito.anyString());
+
+        when(userService.validateInvitedUserName(anyString())).thenReturn(user1.getId());
 
 
-        MockHttpServletRequestBuilder requestBuilder = post("/users/user 1")
+        MockHttpServletRequestBuilder requestBuilder = get("/users/invite/user 1")
                 .contentType(MediaType.APPLICATION_JSON);
 
         // Perform request and verify response
