@@ -233,13 +233,15 @@ public class UserController {
   @ResponseBody
   public List<UserGetDTO> getGlobalranking() {
     List<User> users = userService.getUsers();
-    Collections.sort(users, Comparator.comparing(User::getScore).reversed());
+    Collections.sort(users, Comparator.comparing(User::getScore).reversed().thenComparing(User::getUsername));
     List<UserGetDTO> userGetDTOs = new ArrayList<>();
-    int rank = 1;
-    for (User user : users) {
-      user.setGlobalRanking(rank);
-      rank++;
-      userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
+    for (int i = 0; i < users.size(); i++) {
+      if (i > 0 && users.get(i).getScore() == users.get(i-1).getScore()) {
+        users.get(i).setGlobalRanking(users.get(i-1).getGlobalRanking());
+      }  else {
+        users.get(i).setGlobalRanking(i+1);
+      }
+      userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(users.get(i)));
     }
     return userGetDTOs;   //print userGetDTO objects in the page
   }
@@ -249,17 +251,68 @@ public class UserController {
   @ResponseBody
   public List<UserGetDTO> getCommunityranking(@PathVariable("id") long id) {
     User user = userService.getUserById(id);
-    List<User> community = user.getFriends();
+    List<User> waitcommunity = user.getFriends();
+    List<User> community = new ArrayList<>();
+    for(int i = 0; i < waitcommunity.size(); i++) {
+      User realFriend = waitcommunity.get(i);
+      if(realFriend.getFriends().contains(user)) {
+        community.add(realFriend);
+      }
+    }
     community.add(user);
-    Collections.sort(community, Comparator.comparing(User::getScore).reversed());
+    Collections.sort(community, Comparator.comparing(User::getScore).reversed().thenComparing(User::getUsername));
     List<UserGetDTO> userGetDTOs = new ArrayList<>();
-    int rank = 1;
-    for (User fellow : community) {
-      fellow.setGlobalRanking(rank);
-      rank++;
-      userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(fellow));
+    for (int i = 0; i < community.size(); i++) {
+      if (i > 0 && community.get(i).getScore() == community.get(i-1).getScore()) {
+        community.get(i).setCommunityRanking(community.get(i-1).getCommunityRanking());
+      }  else {
+        community.get(i).setCommunityRanking(i+1);
+      }
+      userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(community.get(i)));
     }
     return userGetDTOs;   //print userGetDTO objects in the page
+  }
+
+  @GetMapping("/myglobalranking/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public int getMyGlobalranking(@PathVariable("id") long id) {
+    User user = userService.getUserById(id);
+    List<User> users = userService.getUsers();
+    Collections.sort(users, Comparator.comparing(User::getScore).reversed().thenComparing(User::getUsername));
+    for (int i = 0; i < users.size(); i++) {
+      if (i > 0 && users.get(i).getScore() == users.get(i-1).getScore()) {
+        users.get(i).setGlobalRanking(users.get(i-1).getGlobalRanking());
+      }  else {
+        users.get(i).setGlobalRanking(i+1);
+      }
+    }
+    return user.getGlobalRanking();
+  }
+
+  @GetMapping("/mycommunityranking/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public int getMyCommunityranking(@PathVariable("id") long id) {
+    User user = userService.getUserById(id);
+    List<User> waitcommunity = user.getFriends();
+    List<User> community = new ArrayList<>();
+    for(int i = 0; i < waitcommunity.size(); i++) {
+      User realFriend = waitcommunity.get(i);
+      if(realFriend.getFriends().contains(user)) {
+        community.add(realFriend);
+      }
+    }
+    community.add(user);
+    Collections.sort(community, Comparator.comparing(User::getScore).reversed().thenComparing(User::getUsername));
+    for (int i = 0; i < community.size(); i++) {
+      if (i > 0 && community.get(i).getScore() == community.get(i-1).getScore()) {
+        community.get(i).setCommunityRanking(community.get(i-1).getCommunityRanking());
+      }  else {
+        community.get(i).setCommunityRanking(i+1);
+      }
+    }
+    return user.getCommunityRanking();
   }
 
 }
