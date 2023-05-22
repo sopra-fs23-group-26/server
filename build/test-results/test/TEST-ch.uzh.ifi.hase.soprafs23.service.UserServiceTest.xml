@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ch.uzh.ifi.hase.soprafs23.service.UserServiceTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2023-05-22T12:55:09" hostname="ast-desktop" time="0.024">
+  <properties/>
+  <testcase name="testUserLoginWithCorrectPassword()" classname="ch.uzh.ifi.hase.soprafs23.service.UserServiceTest" time="0.002"/>
+  <testcase name="testGetUsers()" classname="ch.uzh.ifi.hase.soprafs23.service.UserServiceTest" time="0.0"/>
+  <testcase name="createUser_validInputs_success()" classname="ch.uzh.ifi.hase.soprafs23.service.UserServiceTest" time="0.001"/>
+  <testcase name="testValidateInvitedUserNameWhenUserNotFound()" classname="ch.uzh.ifi.hase.soprafs23.service.UserServiceTest" time="0.001"/>
+  <testcase name="testCheckEmptyStringWithEmptyString()" classname="ch.uzh.ifi.hase.soprafs23.service.UserServiceTest" time="0.0"/>
+  <testcase name="testUpdateAllFields()" classname="ch.uzh.ifi.hase.soprafs23.service.UserServiceTest" time="0.001"/>
+  <testcase name="testCheckEmptyStringWithLongString()" classname="ch.uzh.ifi.hase.soprafs23.service.UserServiceTest" time="0.001"/>
+  <testcase name="testUserLoginWithIncorrectPassword()" classname="ch.uzh.ifi.hase.soprafs23.service.UserServiceTest" time="0.001"/>
+  <testcase name="testAddFriendAccepting()" classname="ch.uzh.ifi.hase.soprafs23.service.UserServiceTest" time="0.001"/>
+  <testcase name="testValidateInvitedUserNameWhenUserIsInARoom()" classname="ch.uzh.ifi.hase.soprafs23.service.UserServiceTest" time="0.002"/>
+  <testcase name="testUserLoginWithUnregisteredUser()" classname="ch.uzh.ifi.hase.soprafs23.service.UserServiceTest" time="0.003"/>
+  <testcase name="createUser_duplicateInputs_throwsException()" classname="ch.uzh.ifi.hase.soprafs23.service.UserServiceTest" time="0.003"/>
+  <testcase name="testAddFriendRejecting()" classname="ch.uzh.ifi.hase.soprafs23.service.UserServiceTest" time="0.0"/>
+  <testcase name="testAddFriendAdding()" classname="ch.uzh.ifi.hase.soprafs23.service.UserServiceTest" time="0.001"/>
+  <testcase name="testGetUserByIdWithValidId()" classname="ch.uzh.ifi.hase.soprafs23.service.UserServiceTest" time="0.001"/>
+  <system-out><![CDATA[inviting func
+null
+no invitedUser
+inviting func
+ch.uzh.ifi.hase.soprafs23.entity.User@4ea17e08
+invitedUser in a room
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
