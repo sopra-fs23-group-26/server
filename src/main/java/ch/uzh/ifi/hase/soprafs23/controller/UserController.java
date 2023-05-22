@@ -219,12 +219,12 @@ public class UserController {
 
 
 
-  @PostMapping("/users/{username}")
+  @GetMapping("/users/invite/{username}")
   @ResponseBody
-  public void validateInvitedUserName(@PathVariable String username){
+  public long validateInvitedUserNameAndGetId(@PathVariable String username){
     System.out.println("inviting");
     System.out.println(username);
-    userService.validateInvitedUserName(username);
+    return userService.validateInvitedUserName(username);
 
   }
 

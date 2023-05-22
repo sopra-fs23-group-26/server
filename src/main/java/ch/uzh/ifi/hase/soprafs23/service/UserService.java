@@ -149,7 +149,7 @@ public class UserService {
 
 
 
-  public void validateInvitedUserName(String username){
+  public long validateInvitedUserName(String username){
     User invitedUser = userRepository.findByUsername(username);
     System.out.println("inviting func");
     System.out.println(invitedUser);
@@ -162,6 +162,7 @@ public class UserService {
       System.out.println("invitedUser in a room");
       throw new ResponseStatusException(HttpStatus.CONFLICT, username+" has been in a room");
     }
+    return invitedUser.getId();
 
   }
 }
