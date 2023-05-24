@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
 import javax.imageio.ImageIO;
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.*;
@@ -84,6 +83,7 @@ public class UserService {
       throw new ResponseStatusException(HttpStatus.CONFLICT, "Wrong Password!");
     }
   }
+
   private void checkIfUserExists(User userToBeCreated) {
     User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
 
@@ -92,7 +92,6 @@ public class UserService {
           "The username provided is not unique. Therefore, the user could not be created!");
     }
   }
-
 
   public User getUserById(long id) {
     return userRepository.findById(id);
@@ -146,8 +145,6 @@ public class UserService {
       userRepository.save(user1);
     }
   }
-
-
 
   public long validateInvitedUserName(String username){
     User invitedUser = userRepository.findByUsername(username);

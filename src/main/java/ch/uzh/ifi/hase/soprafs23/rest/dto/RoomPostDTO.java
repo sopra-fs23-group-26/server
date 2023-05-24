@@ -1,14 +1,15 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 import ch.uzh.ifi.hase.soprafs23.entity.User;
-
 import java.util.Set;
 
 public class RoomPostDTO {
     private Long id;
+
     private String name;
 
     private Set<User> players;
+
     private String gameName;
 
     private Long ownerId;

@@ -4,7 +4,6 @@ public class UserPutDTO {
     private Long id;
     private String username;
     private String password;
-
     private String friendName;
 
     public Long getId() {

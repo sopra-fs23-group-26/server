@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.Comparator;
 import java.util.List;
 
@@ -36,8 +35,6 @@ public class GameHistoryService {
         }
     }
 
-
-
     public List<GameHistory> getGameHistory(User user) {
         List<GameHistory> historyList = gameHistoryRepository.findByUsername(user.getUsername());
         if (!historyList.isEmpty()) {
@@ -46,5 +43,4 @@ public class GameHistoryService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Can't find this user's game history!");
         }
     }
-
 }

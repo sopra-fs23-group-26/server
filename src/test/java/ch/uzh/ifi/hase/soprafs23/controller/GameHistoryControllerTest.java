@@ -38,7 +38,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-
 @WebMvcTest(GameHistoryController.class)
 public class GameHistoryControllerTest {
 
@@ -51,16 +50,11 @@ public class GameHistoryControllerTest {
     @MockBean
     private GameHistoryService gameHistoryService;
 
-
-
-
     @Test
     void getLatestRecord_userNotNull() throws Exception{
         User user = new User();
 
         GameHistory gameHistory = new GameHistory();
-
-
 
         when(userService.getUserById(anyLong())).thenReturn(user);
         when(gameHistoryService.getLatestGameHistory(any(User.class))).thenReturn(gameHistory);
@@ -70,7 +64,6 @@ public class GameHistoryControllerTest {
 
         mockMvc.perform(request)
                 .andExpect(status().isOk());
-
     }
 
     @Test
@@ -87,9 +80,7 @@ public class GameHistoryControllerTest {
 
         mockMvc.perform(request)
                 .andExpect(status().isNotFound());
-
     }
-
 
     @Test
     void getRecord_userNotNull() throws Exception{
@@ -128,6 +119,5 @@ public class GameHistoryControllerTest {
 
         mockMvc.perform(request)
                 .andExpect(status().isNotFound());
-
     }
 }

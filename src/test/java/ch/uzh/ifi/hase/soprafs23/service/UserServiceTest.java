@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -90,7 +89,6 @@ public class UserServiceTest {
         assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser));
     }
 
-
     @Test
     void testGetUsers() {
         // arrange
@@ -116,7 +114,6 @@ public class UserServiceTest {
         assertEquals(userList.get(1).getId(), result.get(1).getId());
         assertEquals(userList.get(1).getUsername(), result.get(1).getUsername());
     }
-
 
     @Test
     void testCheckEmptyStringWithEmptyString() throws IOException, SQLException {
@@ -149,8 +146,6 @@ public class UserServiceTest {
             assertEquals("username should be reduced to within 14 characters.", ex.getReason());
         }
     }
-
-
 
     @Test
     void testUserLoginWithCorrectPassword() throws IOException, SQLException {
@@ -212,8 +207,6 @@ public class UserServiceTest {
         }
     }
 
-
-
     @Test
     void testGetUserByIdWithValidId() throws IOException, SQLException {
         MockitoAnnotations.openMocks(this);
@@ -228,8 +221,6 @@ public class UserServiceTest {
 
         assertEquals(user, result);
     }
-
-
 
     @Test
     void testAddFriendAdding() {
@@ -249,7 +240,6 @@ public class UserServiceTest {
         assertTrue(user2.getFriends().contains(user1));
     }
 
-
     @Test
     void testAddFriendAccepting() {
         // Prepare test data
@@ -268,7 +258,6 @@ public class UserServiceTest {
         assertTrue(user2.getFriends().contains(user1));
     }
 
-
     @Test
     void testAddFriendRejecting() {
         // Prepare test data
@@ -281,7 +270,6 @@ public class UserServiceTest {
         user1Friends.add(user2);
         user1.setFriends(user1Friends);
 
-
         userRepository.save(user1);
         userRepository.save(user2);
 
@@ -289,9 +277,6 @@ public class UserServiceTest {
         userService.addFriend(user1, user2, 3);
         assertFalse(user1.getFriends().contains(user2));
     }
-
-
-
 
     @Test
     public void testValidateInvitedUserNameWhenUserNotFound() {
@@ -333,8 +318,6 @@ public class UserServiceTest {
         }
     }
 
-
-
     @Test
     public void testUpdateAllFields() {
         // Arrange
@@ -356,8 +339,4 @@ public class UserServiceTest {
         assertEquals(userToBeUpdated.getPassword(), updateUserInfo.getPassword());
         assertEquals(userToBeUpdated.getImage(), updateUserInfo.getImage());
     }
-
-
-
-
 }

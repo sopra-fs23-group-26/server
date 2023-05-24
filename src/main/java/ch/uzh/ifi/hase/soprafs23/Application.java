@@ -11,11 +11,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-//import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
 @RestController
 @SpringBootApplication
-//@EnableWebSocket
 public class Application {
 
   public static void main(String[] args) {
@@ -39,12 +37,8 @@ public class Application {
     };
   }
 
-
   @Bean
   public ScheduledExecutorService scheduledExecutorService() {
     return Executors.newScheduledThreadPool(1);
   }
-
-
-
 }

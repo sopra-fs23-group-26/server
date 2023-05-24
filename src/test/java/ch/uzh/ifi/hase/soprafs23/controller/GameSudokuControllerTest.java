@@ -76,6 +76,5 @@ class GameSudokuControllerTest {
         // 发送请求，并验证响应结果
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk());
-
     }
 }

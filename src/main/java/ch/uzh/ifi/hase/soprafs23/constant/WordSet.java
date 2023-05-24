@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.constant;
 
 import org.springframework.web.client.RestTemplate;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -70,8 +69,6 @@ public class WordSet {
         char c = str.charAt(0);
         return (c == 'n');
     }
-
-
 
     public String getUndercoverWord() {
         return undercoverWord;

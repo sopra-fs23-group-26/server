@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
@@ -25,7 +24,6 @@ public class GameSudokuController {
         this.userService = userService;
         this.gameHistoryRepository = gameHistoryRepository;
     }
-
 
     @GetMapping("/sudoku/create/{requiredDifficulty}")
     @ResponseStatus(HttpStatus.OK)
@@ -53,8 +51,6 @@ public class GameSudokuController {
 
         return value;
     }
-
-
 
     //if the answer is correct, return true
     @PutMapping("/sudoku/validation/{userId}/{difficulty}")
@@ -155,6 +151,4 @@ public class GameSudokuController {
         }
         return true;
     }
-
-
 }

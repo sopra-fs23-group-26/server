@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -45,8 +44,6 @@ public class UCService {
         this.gameHistoryRepository = gameHistoryRepository;
         this.roomService=roomService;
     }
-
-
 
     public GameUndercover createGame(Room room){
         //initialize
@@ -78,7 +75,6 @@ public class UCService {
         undercover.setDescription(null);
         userRepository.save(undercover);
 
-
         //set others to be detective
         for (int i = 0; i < userlist.size(); i++) {
             if (i != undercoverIndex) {
@@ -90,19 +86,16 @@ public class UCService {
                 userRepository.save(userlist.get(i));
             }
         }
-//        gameUndercover = (GameUndercover) undercoverRepository.save(gameUndercover);
+
         undercoverRepository.save(gameUndercover);
         undercoverRepository.flush();
         room.setGameUndercover(gameUndercover);
         log.debug("Created Information for game: {}", gameUndercover);
-//        scheduler = Executors.newSingleThreadScheduledExecutor();
-//        startDescribeScheduler(gameUndercover, userlist.get(0));
         return gameUndercover;
     }
 
     public GameUndercover vote(GameUndercover gameUndercover, List<User> votedUser) {
         //eliminate the votedUser from set users, set its isVoted filed to true
-
         for(User user : votedUser){
             user.setVoted(true);
             userRepository.save(user);
@@ -113,7 +106,6 @@ public class UCService {
             gameEndsSetting(gameUndercover);
         }else{
             gameUndercover.setGameStatus(GameStatus.describing);
-
             // start a new round:
             Set<User> users = gameUndercover.getUsers();
             List<User> userlist = new ArrayList<>(users);
@@ -182,7 +174,6 @@ public class UCService {
         // clear the room
     }
 
-
     public void deleteAGame(long gameId){
         GameUndercover gameToDelete = undercoverRepository.findById(gameId);
         if(gameToDelete!=null) {
@@ -229,39 +220,11 @@ public class UCService {
         return undercoverRepository.findById(gameId);
     }
 
-
-//
-//    private ScheduledExecutorService scheduler;
-//    private ScheduledFuture<?> describeFuture;
-//
-//    public void startDescribeScheduler(GameUndercover gameUndercover, User finishedUser) {
-//        // cancel the previous scheduled task, if any
-//        if (describeFuture != null) {
-//            describeFuture.cancel(false);
-//        }
-//
-//        // schedule the describe function to be called after 1 minute, and then every 1 minute
-//        describeFuture = scheduler.scheduleAtFixedRate(() -> {
-//            describe(gameUndercover, finishedUser);
-//        }, 1, 1, TimeUnit.MINUTES);
-//    }
-//
-//    public void stopDescribeScheduler() {
-//        // stop the scheduled executor service
-//        scheduler.shutdown();
-//    }
-
     /*first check if the current player is the last one,
     * if true, set the game status to voting and reset current player,
-    * if false, set the current player to next one
-    *
-    *
-    */
-
-
+    * if false, set the current player to next one*/
 
     private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
 
     public GameUndercover describe(GameUndercover gameUndercover, User finishedUser) {
 
@@ -301,16 +264,10 @@ public class UCService {
 
         if (ifRoundEnd) {
             gameUndercover.setGameStatus(GameStatus.voting);
-//            scheduler.schedule(() -> {
-//                System.out.println("two minutes");
-//                gameEndsSetting(gameUndercover);
-//            }, 2, TimeUnit.MINUTES);
         }
         undercoverRepository.save(gameUndercover);
         return gameUndercover;
     }
-
-
 
     public Boolean voteAndCheckIfEnds(GameUndercover gameUndercover, User votedUser) {
         votedUser.setVotes(votedUser.getVotes()+1);
@@ -331,7 +288,6 @@ public class UCService {
         Set<User> players = gameUndercover.getUsers();
         List<User> users = new ArrayList<>(players);
 
-
         // Find the maximum number of votes received by a user
         int maxVotes = Integer.MIN_VALUE;
         for (User user : users) {
@@ -347,7 +303,6 @@ public class UCService {
                 outUsers.add(user);
             }
         }
-
         return outUsers;
     }
 
@@ -367,6 +322,4 @@ public class UCService {
         User user=userRepository.findByUsername(name);
         return user;
     }
-
-
 }

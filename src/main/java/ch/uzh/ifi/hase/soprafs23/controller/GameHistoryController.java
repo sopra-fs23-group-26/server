@@ -22,7 +22,6 @@ public class GameHistoryController {
         this.userService = userService;
     }
 
-
     @GetMapping("/gameHistory/{userId}/latestRecord")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -44,8 +43,4 @@ public class GameHistoryController {
         }
         return gameHistoryService.getGameHistory(user);
     }
-
-
-
-
 }

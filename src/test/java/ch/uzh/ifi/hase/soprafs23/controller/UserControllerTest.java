@@ -35,7 +35,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-
 /**
  * UserControllerTest
  * This is a WebMvcTest which allows to test the UserController i.e. GET/POST
@@ -210,7 +209,6 @@ public class UserControllerTest {
 
         MockMultipartFile imageFile = new MockMultipartFile("image", "test.jpg", "image/jpeg", "test".getBytes());
 
-
         MockHttpServletRequestBuilder requestBuilder = put("/users/"+userOld.getId())
                 .param("username", "test new")
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -344,7 +342,6 @@ public class UserControllerTest {
 
         given(userService.UserLogin(any(User.class))).willReturn(user);
 
-
         MockHttpServletRequestBuilder requestBuilder = post("/login")
                 .content(asJsonString(userPostDTO))
                 .contentType(MediaType.APPLICATION_JSON);
@@ -354,7 +351,6 @@ public class UserControllerTest {
                 .andExpect(status().isOk());
 
     }
-
 
     @Test
     void getFriends_success() throws Exception{
@@ -449,7 +445,6 @@ public class UserControllerTest {
                 .param("friendName", "user 1")
                 .param("addFriendStatus", "1");
 
-
         // Perform request and verify response
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk());
@@ -485,7 +480,6 @@ public class UserControllerTest {
                 .param("friendName", "user 1")
                 .param("addFriendStatus", "1");
 
-
         // Perform request and verify response
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNotFound());
@@ -519,7 +513,6 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("friendName", "user 1")
                 .param("addFriendStatus", "1");
-
 
         // Perform request and verify response
         mockMvc.perform(requestBuilder)
@@ -560,7 +553,6 @@ public class UserControllerTest {
                 .andExpect(status().isConflict());
     }
 
-
     @Test
     void validateInvitedUserName_success() throws Exception{
         User user1 = new User();
@@ -568,9 +560,7 @@ public class UserControllerTest {
         user1.setUsername("user 1");
         user1.setPassword("password");
 
-
         when(userService.validateInvitedUserName(anyString())).thenReturn(user1.getId());
-
 
         MockHttpServletRequestBuilder requestBuilder = get("/users/invite/user 1")
                 .contentType(MediaType.APPLICATION_JSON);
@@ -638,8 +628,6 @@ public class UserControllerTest {
                 .andExpect(status().isOk());
     }
 
-
-
     /**
      * Helper Method to convert userPostDTO into a JSON string such that the input
      * can be processed
@@ -656,6 +644,4 @@ public class UserControllerTest {
                     String.format("The request body could not be created.%s", e.toString()));
         }
     }
-
-  
 }

@@ -3,7 +3,6 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto;
 import java.sql.Blob;
 
 public class UserGetDTO {
-
   private Long id;
   private String username;
   private int score;

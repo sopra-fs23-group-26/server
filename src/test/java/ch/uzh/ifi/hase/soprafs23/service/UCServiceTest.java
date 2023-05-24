@@ -179,22 +179,13 @@ class UCServiceTest {
         users.add(user4);
         room.setPlayers(users);
         game.setGameStatus(GameStatus.describing);
-//        game.setCurrentPlayerUsername(user1.getUsername());
         game.setRoom(room);
         room.setGameUndercover(game);
 
         // Vote off one of the players
         List<User> votedUsers = new ArrayList<>();
         votedUsers.add(user1);
-//        votedUsers.add(user2);
-//        votedUsers.add(user3);
-//        votedUsers.add(user4);
-//        game = ucService.vote(game, votedUsers);
-//        assertEquals(game.getGameStatus(), GameStatus.describing);
-
     }
-
-
 
     @Test
     void testDescribeRoundEnd() {
@@ -226,11 +217,7 @@ class UCServiceTest {
         GameUndercover gameUndercover = new GameUndercover();
         gameUndercover.setGameStatus(GameStatus.describing);
         undercoverRepository.save(gameUndercover);
-
-        // check that the game status is now voting
-        //assertEquals(GameStatus.voting, gameUndercover.getGameStatus());
     }
-
 
     @Test
     void testGameEndsSettingUndercoverWin(){
@@ -240,7 +227,6 @@ class UCServiceTest {
         user1.setVoted(true);
         user1.setUndercover(false);
         user1.setWord("word1");
-
 
         User user2 = new User();
         user2.setUsername("user2");
@@ -269,7 +255,6 @@ class UCServiceTest {
         assertEquals(false, user1.isVoted());
         assertEquals(false, user2.isUndercover());
         assertEquals(GameStatus.gameEnd, gameUndercover.getGameStatus());
-
     }
 
     @Test
@@ -280,7 +265,6 @@ class UCServiceTest {
         user1.setVoted(false);
         user1.setUndercover(false);
         user1.setWord("word1");
-
 
         User user2 = new User();
         user2.setUsername("user2");
@@ -308,9 +292,7 @@ class UCServiceTest {
         assertEquals(false, user2.isVoted());
         assertEquals(false, user2.isUndercover());
         assertEquals(GameStatus.gameEnd, gameUndercover.getGameStatus());
-
     }
-
 
    @Test
     void testGetGameById(){
@@ -320,7 +302,6 @@ class UCServiceTest {
        user1.setVoted(true);
        user1.setUndercover(false);
        user1.setWord("word1");
-
 
        User user2 = new User();
        user2.setUsername("user2");
@@ -340,12 +321,9 @@ class UCServiceTest {
        gameUndercover.setGameStatus(GameStatus.describing);
        undercoverRepository.save(gameUndercover);
 
-
        when(undercoverRepository.findById(anyLong())).thenReturn(gameUndercover);
 
        assertEquals(gameUndercover, ucService.getGameById(anyLong()));
-
-
    }
 
    @Test
@@ -358,7 +336,6 @@ class UCServiceTest {
        user1.setUndercover(false);
        user1.setWord("word1");
        user1.setVotes(1);
-
 
        User user2 = new User();
        user2.setUsername("user2");
@@ -381,7 +358,6 @@ class UCServiceTest {
        assertEquals(true, ucService.voteAndCheckIfEnds(gameUndercover, user1));
    }
 
-
    @Test
     void testGetOutUsers(){
        Set<User> users = new HashSet<>();
@@ -391,7 +367,6 @@ class UCServiceTest {
        user1.setUndercover(false);
        user1.setWord("word1");
        user1.setVotes(2);
-
 
        User user2 = new User();
        user2.setUsername("user2");
@@ -416,7 +391,6 @@ class UCServiceTest {
        result.add(user1);
        assertEquals(result, ucService.getOutUsers(gameUndercover));
    }
-
 
    @Test
     void testGetCurrentPlayer(){
@@ -449,7 +423,6 @@ class UCServiceTest {
        user1.setWord("word1");
        user1.setVotes(2);
 
-
        User user2 = new User();
        user2.setId(2L);
        user2.setUsername("user2");
@@ -473,7 +446,6 @@ class UCServiceTest {
        GameUndercover game = ucService.describe(gameUndercover, user1);
        assertEquals(GameStatus.describing, game.getGameStatus());
 
-
        User user3 = new User();
        user2.setId(3L);
        user2.setUsername("user3");
@@ -484,8 +456,5 @@ class UCServiceTest {
 
        GameUndercover game_ = ucService.describe(gameUndercover, user3);
        assertEquals(GameStatus.voting, game_.getGameStatus());
-
-
-
    }
 }

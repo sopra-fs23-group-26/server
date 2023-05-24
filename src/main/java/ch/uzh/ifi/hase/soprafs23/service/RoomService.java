@@ -22,12 +22,7 @@ public class RoomService {
 
     private final RoomRepository roomRepository;
 
-
     private final UserRepository userRepository;
-
-
-
-
 
     private final Logger log = LoggerFactory.getLogger(RoomService.class);
 
@@ -37,8 +32,6 @@ public class RoomService {
 
         this.userRepository = userRepository;
     }
-
-
 
     public Room getRoomById(long roomId) {
         return roomRepository.findById(roomId);
@@ -66,7 +59,6 @@ public class RoomService {
         }
     }
 
-
     private void checkIfRoomExists(String name){
         System.out.println("name");
         System.out.println(name);
@@ -80,11 +72,9 @@ public class RoomService {
     }
 
     public List<Room> getAllRooms(){
-
         List allRooms = roomRepository.findAll();
         log.info("find Information for all Rooms: {}", allRooms);
         return allRooms;
-
     }
 
     public Room getARoom(long roomId){
@@ -96,8 +86,6 @@ public class RoomService {
         Room room = roomRepository.findById(roomId);
         return room.getGameUndercover().getId();
     }
-
-
 
     public void joinARoom(long userId, long roomId){
         checkIfRoomFull(roomId);
@@ -129,10 +117,8 @@ public class RoomService {
         for(User user: roomToDelete.getPlayers()){
             user.setRoom(null);
         }
-
         roomRepository.delete(roomToDelete);
         roomRepository.flush();
-
     }
 
     public void checkIfRoomFull(long roomId){
@@ -144,9 +130,5 @@ public class RoomService {
         if(players.size()>=8){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "There has been 8 player in this room");
         }
-
     }
-
 }
-
-

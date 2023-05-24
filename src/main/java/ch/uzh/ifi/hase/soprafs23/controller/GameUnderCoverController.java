@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
-
 import ch.uzh.ifi.hase.soprafs23.constant.GameStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.GameUndercover;
 import ch.uzh.ifi.hase.soprafs23.entity.Room;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -58,12 +56,10 @@ public class GameUnderCoverController {
         Room room = roomService.getRoomById(roomId);
         if(room.getGameUndercover()!=null){
             return room.getGameUndercover();
-
         }
         GameUndercover gameundercover= ucService.createGame(room);
         return gameundercover;
     }
-
 
     @PutMapping("/undercover/{gameId}/users/{userId}/description")
     @ResponseStatus(HttpStatus.OK)
@@ -76,14 +72,11 @@ public class GameUnderCoverController {
         return gameUndercover;
     }
 
-
     @Autowired
     private ScheduledExecutorService scheduler;
     private ScheduledFuture<?> scheduledFuture;
     private final long delay = 1;
     private final long period = 1;
-
-
 
     /*
     * when a round of voting finished, use this put mapping
@@ -114,5 +107,4 @@ public class GameUnderCoverController {
             return ucService.vote(gameUndercover, outUser);
         }
     }
-
 }

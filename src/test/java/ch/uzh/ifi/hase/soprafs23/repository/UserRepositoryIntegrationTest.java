@@ -45,7 +45,4 @@ public class UserRepositoryIntegrationTest {
         assertEquals(found.getUsername(), user.getUsername());
         assertEquals(found.getToken(), user.getToken());
     }
-
-    // findById_success
-
 }

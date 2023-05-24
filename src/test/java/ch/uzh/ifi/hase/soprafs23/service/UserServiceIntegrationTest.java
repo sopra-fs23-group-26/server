@@ -53,7 +53,6 @@ public class UserServiceIntegrationTest {
         // then
         assertEquals(testUser.getId(), createdUser.getId());
         assertEquals(testUser.getUsername(), createdUser.getUsername());
-
     }
 
     @Test
@@ -76,5 +75,4 @@ public class UserServiceIntegrationTest {
         // check that an error is thrown
         assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser2));
     }
-  
 }

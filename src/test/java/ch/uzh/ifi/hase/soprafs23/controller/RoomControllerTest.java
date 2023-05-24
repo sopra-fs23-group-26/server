@@ -36,10 +36,8 @@ class RoomControllerTest {
     @MockBean
     private RoomService roomService;
 
-
     @Autowired
     private MockMvc mockMvc;
-
 
     private String asJsonString(final Object object) {
         try {
@@ -52,12 +50,10 @@ class RoomControllerTest {
 
     @Test
     void createARoom_valid_input() throws Exception {
-
         Room room = new Room();
         room.setOwnerId(1L);
         room.setName("a's game");
         room.setGameName("under cover");
-
 
         RoomPostDTO roomPostDTO = new RoomPostDTO();
         roomPostDTO.setGameName("under cover");
@@ -72,18 +68,15 @@ class RoomControllerTest {
                 .content(asJsonString(roomPostDTO));
         // then
         mockMvc.perform(postRequest)
-                .andExpect(status().isCreated())
-;
+                .andExpect(status().isCreated());
     }
 
     @Test
     void joinARoom_valid_input() throws Exception {
-
         Room room = new Room();
         room.setOwnerId(1L);
         room.setName("a's game");
         room.setGameName("under cover");
-
 
         RoomPostDTO roomPostDTO = new RoomPostDTO();
         roomPostDTO.setGameName("under cover");
@@ -98,8 +91,7 @@ class RoomControllerTest {
                 .content(asJsonString(roomPostDTO));
         // then
         mockMvc.perform(postRequest)
-                .andExpect(status().isOk())
-        ;
+                .andExpect(status().isOk());
     }
 
 
@@ -111,7 +103,6 @@ class RoomControllerTest {
         room.setOwnerId(1L);
         room.setName("a's game");
         room.setGameName("under cover");
-
 
         RoomPostDTO roomPostDTO = new RoomPostDTO();
         roomPostDTO.setGameName("under cover");
@@ -126,8 +117,7 @@ class RoomControllerTest {
                 .content(asJsonString(roomPostDTO));
         // then
         mockMvc.perform(postRequest)
-                .andExpect(status().isOk())
-        ;
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -137,7 +127,6 @@ class RoomControllerTest {
         room.setOwnerId(1L);
         room.setName("a's game");
         room.setGameName("under cover");
-
 
         RoomPostDTO roomPostDTO = new RoomPostDTO();
         roomPostDTO.setGameName("under cover");
@@ -154,8 +143,7 @@ class RoomControllerTest {
                 .content(asJsonString(roomPostDTO));
         // then
         mockMvc.perform(postRequest)
-                .andExpect(status().isOk())
-        ;
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -176,8 +164,6 @@ class RoomControllerTest {
         List<Room> roomList = new ArrayList<>();
         roomList.add(room);
 
-
-
         given(roomService.getAllRooms()).willReturn(roomList);
 
         // when/then -> do the request + validate the result
@@ -185,10 +171,8 @@ class RoomControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
         // then
         mockMvc.perform(postRequest)
-                .andExpect(status().isCreated())
-        ;
+                .andExpect(status().isCreated());
     }
-
 
     @Test
     void findARoomUndercover() throws Exception {
@@ -202,10 +186,6 @@ class RoomControllerTest {
         room.setName("a's game");
         room.setOwnerId(1L);
 
-
-
-
-
         given(roomService.getARoom(anyLong())).willReturn(room);
 
         // when/then -> do the request + validate the result
@@ -213,10 +193,6 @@ class RoomControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
         // then
         mockMvc.perform(postRequest)
-                .andExpect(status().isCreated())
-        ;
+                .andExpect(status().isCreated());
     }
-
-
-
 }

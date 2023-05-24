@@ -11,13 +11,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.UserService;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -42,7 +40,6 @@ import java.util.concurrent.TimeUnit;
 @RestController
 public class UserController {
   private final UserService userService;
-
 
   UserController(UserService userService) {
     this.userService = userService;
@@ -123,32 +120,13 @@ public class UserController {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile image not found!");
     }
 
-//    BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucketName, "user-photos/" + user.getId() + "/" + fileName))
-//            .setContentType(MediaType.IMAGE_JPEG.toString())
-//            .build();
-//    Blob newBlob = storage.create(blobInfo, blob.getContent());
-//
-//    byte[] content = newBlob.getContent();
-//    ByteArrayResource resource = new ByteArrayResource(content);
-
     ByteArrayResource resource = new ByteArrayResource(blob.getContent());
-
-//    HttpHeaders headers = new HttpHeaders();
-//    headers.setCacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic().getHeaderValue());
-
 
     return ResponseEntity.ok()
             .contentType(MediaType.IMAGE_JPEG)
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
             .body(resource);
   }
-
-
-
-
-
-
-
 
   @PostMapping("/users")
   @ResponseStatus(HttpStatus.CREATED)
@@ -224,8 +202,6 @@ public class UserController {
     }
     userService.addFriend(user1, user2, addFriendStatus); //addFriendStatus = 1(add friend), 2(accept friend), 3(reject friend)
   }
-
-
 
   @GetMapping("/users/invite/{username}")
   @ResponseBody
@@ -322,7 +298,4 @@ public class UserController {
     }
     return user.getCommunityRanking();
   }
-
 }
-
-

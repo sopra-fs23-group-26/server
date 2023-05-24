@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
-
 import org.springframework.web.multipart.MultipartFile;
 
 public class UserPostDTO {
@@ -16,7 +15,6 @@ public class UserPostDTO {
     public void setImage(MultipartFile image) {
         this.image = image;
     }
-
 
     public Long getId() {
         return id;

@@ -7,7 +7,6 @@ import ch.uzh.ifi.hase.soprafs23.service.RoomService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.RoomPostDTO;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ public class RoomController {
         this.roomService = roomService;
     }
 
-
     @PostMapping("/undercover/rooms")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -33,9 +31,6 @@ public class RoomController {
         Room createdRoom = roomService.createRoom(roomInput);
         return DTOMapper.INSTANCE.convertEntityToRoomPostDTO(createdRoom);
     }
-
-
-
 
     @GetMapping("/undercover/rooms")
     @ResponseStatus(HttpStatus.CREATED)
@@ -49,7 +44,6 @@ public class RoomController {
         return roomList;
     }
 
-
     @GetMapping("/undercover/rooms/{roomId}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -57,8 +51,6 @@ public class RoomController {
         Room room = roomService.getARoom(roomId);
         return DTOMapper.INSTANCE.convertEntityToRoomGetDTO(room);
     }
-
-
 
     @GetMapping("/undercover/getGameId/{roomId}")
     @ResponseStatus(HttpStatus.CREATED)
@@ -68,7 +60,6 @@ public class RoomController {
 
     }
 
-
     @PutMapping("/undercover/rooms/{roomId}/{userId}")
     @ResponseBody
     public RoomGetDTO joinARoom(@PathVariable("roomId") long roomId, @PathVariable("userId") long userId) throws IOException, SQLException{
@@ -76,7 +67,6 @@ public class RoomController {
         roomService.joinARoom(userId, roomId);
         return DTOMapper.INSTANCE.convertEntityToRoomGetDTO(roomService.getRoomById(roomId));
     }
-
 
     @DeleteMapping("/undercover/rooms/{roomId}/{userId}")
     @ResponseBody
@@ -86,8 +76,6 @@ public class RoomController {
         return DTOMapper.INSTANCE.convertEntityToRoomGetDTO(roomService.getRoomById(roomId));
     }
 
-
-
     @DeleteMapping("/undercover/rooms/{roomId}")
     @ResponseBody
     public RoomGetDTO deleteARoom(@PathVariable("roomId") long roomId) throws IOException, SQLException{
@@ -96,18 +84,4 @@ public class RoomController {
         roomService.deleteARoom(roomId);
         return DTOMapper.INSTANCE.convertEntityToRoomGetDTO(roomService.getRoomById(roomId));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

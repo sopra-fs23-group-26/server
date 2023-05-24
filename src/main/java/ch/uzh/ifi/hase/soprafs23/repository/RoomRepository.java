@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Set;
 
@@ -23,15 +22,4 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     List<Room> findAll();
 
     void delete(Room room);
-
-
-//
-//    @Modifying
-//    @Transactional
-//    @Query("UPDATE User u SET u.room = :room WHERE u.id = :userId")
-//    void addUserToRoom(@Param("userId") long userId, @Param("room") Room room);
-//
-//
-//
-//
 }

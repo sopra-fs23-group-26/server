@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 
 public class SudokuResponse {
@@ -30,6 +29,7 @@ public class SudokuResponse {
 
     public static class Grid {
         private String difficulty;
+
         private String[][] value;
 
         public String getDifficulty() {

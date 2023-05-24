@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -73,7 +72,6 @@ public class GameHistoryServiceTest {
 
         GameHistory gameHistory = new GameHistory();
         List<GameHistory> gameHistoryList = new ArrayList<>();
-//        gameHistoryList.add(gameHistory);
 
         when(gameHistoryRepository.findByUsername(anyString())).thenReturn(gameHistoryList);
 
@@ -108,7 +106,6 @@ public class GameHistoryServiceTest {
 
         GameHistory gameHistory = new GameHistory();
         List<GameHistory> gameHistoryList = new ArrayList<>();
-//        gameHistoryList.add(gameHistory);
 
         when(gameHistoryRepository.findByUsername(anyString())).thenReturn(gameHistoryList);
 

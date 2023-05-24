@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 import ch.uzh.ifi.hase.soprafs23.entity.User;
-
 import java.util.Set;
 
 public class RoomGetDTO {
@@ -9,7 +8,6 @@ public class RoomGetDTO {
     private String name;
     private Set<User> players;
     private String gameName;
-
     private Long ownerId;
 
     public Set<User> getPlayers() {
@@ -43,7 +41,6 @@ public class RoomGetDTO {
     public void setGameName(String gameName) {
         this.gameName = gameName;
     }
-
 
     public void setOwnerId(Long ownerId){ this.ownerId=ownerId;}
 

@@ -47,9 +47,7 @@ public class GameUnderCoverControllerTest {
     @InjectMocks
     private GameUnderCoverController gameUnderCoverController;
 
-
     private MockMvc mockMvc;
-
 
     @BeforeEach
     public void setUp() {
@@ -67,7 +65,6 @@ public class GameUnderCoverControllerTest {
 
         // Execute and Verify
         mockMvc.perform(get("/undercover/{gameId}", gameId))
-//                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(gameId))
                 .andExpect(jsonPath("$.gameStatus").value(GameStatus.describing.toString()));
 
@@ -85,7 +82,6 @@ public class GameUnderCoverControllerTest {
         Room room = new Room();
         room.setId(roomId);
         gameUndercover.setRoom(room);
-
 
         gameUndercover.setId(gameId);
         User describedUser = new User();
@@ -106,49 +102,10 @@ public class GameUnderCoverControllerTest {
                 .andExpect(jsonPath("$.users[0].id").value(userId))
                 .andExpect(jsonPath("$.users[0].description").value(description));
 
-
         verify(ucService, times(1)).getGameById(gameId);
         verify(userService, times(1)).getUserById(userId);
         verify(ucService, times(1)).describe(gameUndercover, describedUser);
     }
-
-//    @Test
-//    public void createGame_validInput_gameCreated() throws Exception {
-//        // Setup
-//        long roomId = 1L;
-//        Room room = new Room();
-//        room.setId(roomId);
-//        Set<User> players = new HashSet<>();
-//        User user1 = new User();
-//        user1.setId(1L);
-//        User user2 = new User();
-//        user2.setId(2L);
-//        players.add(user1);
-//        players.add(user2);
-//        room.setPlayers(players);
-//        GameUndercover gameUndercover = new GameUndercover();
-//        gameUndercover.setGameStatus(GameStatus.describing);
-//        gameUndercover.setRoom(room);
-////        when(roomService.getRoomById(roomId)).thenReturn(room);
-////        when(ucService.createGame(room.getPlayers())).thenReturn(new GameUndercover());
-//        given(roomService.getRoomById(roomId)).willReturn(room);
-//        given(ucService.createGame(room)).willReturn(gameUndercover);
-//
-//
-//        // Execute and Verify
-//        mockMvc.perform(post("/undercover/rooms/{roomId}", roomId)
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isCreated())
-//                .andExpect(jsonPath("$.gameStatus").value(GameStatus.describing.toString()))
-//                .andExpect(jsonPath("$.users").isArray())
-//                .andExpect(jsonPath("$.users", hasSize(2)))
-//                .andExpect(jsonPath("$.users[*].id", containsInAnyOrder(1, 2)));
-//
-//        verify(roomService, times(1)).getRoomById(roomId);
-//        verify(ucService, times(1)).createGame(room);
-//
-//    }
-//
 
     @Test
     public void vote_validInput_gameUpdated() throws Exception {
@@ -188,7 +145,6 @@ public class GameUnderCoverControllerTest {
         verify(ucService, times(1)).voteAndCheckIfEnds(gameUndercover, votedUser);
     }
 
-
     @Test
     public void vote_gameEndsWithMostVotedUser_userRemovedAndGameStatusChanged() throws Exception {
         // Setup
@@ -220,31 +176,6 @@ public class GameUnderCoverControllerTest {
 // Set up list of out users
         List<User> outUsers = new ArrayList<>();
         outUsers.add(votedUser1);
-//
-//        given(ucService.getGameById(gameId)).willReturn(gameUndercover);
-//        given(userService.getUserById(voteUserId)).willReturn(voteUser);
-//        given(userService.getUserById(votedUserId1)).willReturn(votedUser1);
-//        given(userService.getUserById(votedUserId2)).willReturn(votedUser2);
-//        given(ucService.voteAndCheckIfEnds(gameUndercover, votedUser1)).willReturn(true);
-//        given(ucService.getOutUsers(gameUndercover)).willReturn(outUsers);
-//        given(ucService.vote(gameUndercover, outUsers)).willReturn(gameUndercover);
-
-// Execute and Verify
-//        mockMvc.perform(MockMvcRequestBuilders.put("/undercover/{gameId}/votes/{voteUserId}/{votedUserId1}", gameId, voteUserId, votedUserId1)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//                .andExpect(jsonPath("$.gameStatus").value(GameStatus.gameEnd.toString()))
-//                .andExpect(jsonPath("$.room.players", hasSize(2)))
-//                .andExpect(jsonPath("$.room.players[0].id").value(voteUserId))
-//                .andExpect(jsonPath("$.room.players[1].id").value(votedUserId2));
-//
-//        verify(ucService, times(1)).getGameById(gameId);
-//        verify(userService, times(1)).getUserById(voteUserId);
-//        verify(userService, times(1)).getUserById(votedUserId1);
-//        verify(ucService, times(1)).voteAndCheckIfEnds(gameUndercover, votedUser1);
-//        verify(ucService, times(1)).getOutUsers(gameUndercover);
-//        verify(ucService, times(1)).vote(gameUndercover, outUsers);
-
     }
 
     @Test
@@ -274,6 +205,7 @@ public class GameUnderCoverControllerTest {
         verify(userService, times(1)).getUserById(voteUserId);
         verify(userService, times(1)).getUserById(votedUserId);
     }
+
     @Test
     public void vote_votedUserAlreadyOut_throwsForbidden() throws Exception {
         // Setup
@@ -302,7 +234,6 @@ public class GameUnderCoverControllerTest {
         verify(userService, times(1)).getUserById(votedUserId);
     }
 
-
     @Test
     public void createGame_gameExistsInRoom_gameUndercoverReturned() throws Exception {
         // Setup
@@ -316,19 +247,8 @@ public class GameUnderCoverControllerTest {
         // Execute and Verify
         mockMvc.perform(MockMvcRequestBuilders.post("/undercover/rooms/{roomId}", roomId)
                         .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(gameUndercover.getId()));
 
         verify(roomService, times(1)).getRoomById(roomId);
     }
-
-
-
-
-
-
-
-
-
 }
-

@@ -21,7 +21,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-
 import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
@@ -58,11 +57,6 @@ class RoomServiceTest {
 
     @InjectMocks
     private UserService userService;
-
-
-
-
-
 
     private Room testRoom;
 
@@ -105,7 +99,6 @@ class RoomServiceTest {
         assert returnedRoom.equals(testRoom);
     }
 
-
     @Test
     public void testGetARoom() {
         // Mock the room repository to return the mock room object when findById is called with argument 1L
@@ -118,7 +111,6 @@ class RoomServiceTest {
         assert returnedRoom.equals(testRoom);
     }
 
-
     @Test
     public void testGetAllRoom() {
         // Mock the room repository to return the mock room object when findById is called with argument 1L
@@ -126,12 +118,10 @@ class RoomServiceTest {
         list_room.add(testRoom);
         when(roomRepository.findAll()).thenReturn(list_room);
 
-
         List<Room> returnedRoom = roomService.getAllRooms();
         // Assert that the returned room is the same as the mock room object
         assert returnedRoom.equals(list_room);
     }
-
 
     @Test
     public void testCreateRoom() {
@@ -169,7 +159,6 @@ class RoomServiceTest {
         Mockito.verify(roomRepository, Mockito.times(1)).flush();
     }
 
-
     @Test
     public void testJoinARoom_Success() {
         // Arrange
@@ -194,7 +183,6 @@ class RoomServiceTest {
         assertEquals(1, room.getPlayers().size());
         assertTrue(room.getPlayers().contains(newUser));
     }
-
 
     @Test
     public void testJoinARoom_GameAlreadyStarted() {
@@ -247,7 +235,6 @@ class RoomServiceTest {
 
     }
 
-
     @Test
     public void testDeleteARoom_Success() {
         // Arrange
@@ -276,13 +263,4 @@ class RoomServiceTest {
         assertNull(user1.getRoom());
         assertNull(user2.getRoom());
     }
-
-
-
-
-
-
-
-
-
 }
