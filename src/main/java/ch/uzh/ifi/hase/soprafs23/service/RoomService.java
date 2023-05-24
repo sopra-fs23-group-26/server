@@ -137,6 +137,9 @@ public class RoomService {
 
     public void checkIfRoomFull(long roomId){
         Room room = roomRepository.findById(roomId);
+        if (room==null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This room doesn't exist anymore ");
+        }
         Set<User> players = room.getPlayers();
         if(players.size()>=8){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "There has been 8 player in this room");
