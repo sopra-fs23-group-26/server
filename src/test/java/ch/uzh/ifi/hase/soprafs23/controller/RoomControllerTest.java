@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
+import ch.uzh.ifi.hase.soprafs23.entity.GameUndercover;
 import ch.uzh.ifi.hase.soprafs23.entity.Room;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.RoomGetDTO;
@@ -194,5 +195,28 @@ class RoomControllerTest {
         // then
         mockMvc.perform(postRequest)
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    void getUndercoverId() throws Exception{
+        GameUndercover gameUndercover = new GameUndercover();
+        gameUndercover.setId(1L);
+
+        Room room = new Room();
+        room.setGameName("under cover");
+        room.setName("a's game");
+        room.setOwnerId(1L);
+        room.setGameUndercover(gameUndercover);
+
+        when(roomService.getUndercoverGameId(anyLong())).thenReturn(gameUndercover.getId());
+
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder postRequest = get("/undercover/getGameId/1")
+                .contentType(MediaType.APPLICATION_JSON);
+        // then
+        mockMvc.perform(postRequest)
+                .andExpect(status().isCreated());
+
+
     }
 }
