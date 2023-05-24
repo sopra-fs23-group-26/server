@@ -5,10 +5,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * User Controller
@@ -125,19 +123,29 @@ public class UserController {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile image not found!");
     }
 
-    BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucketName, "user-photos/" + user.getId() + "/" + fileName))
-            .setContentType(MediaType.IMAGE_JPEG.toString())
-            .build();
-    Blob newBlob = storage.create(blobInfo, blob.getContent());
+//    BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucketName, "user-photos/" + user.getId() + "/" + fileName))
+//            .setContentType(MediaType.IMAGE_JPEG.toString())
+//            .build();
+//    Blob newBlob = storage.create(blobInfo, blob.getContent());
+//
+//    byte[] content = newBlob.getContent();
+//    ByteArrayResource resource = new ByteArrayResource(content);
 
-    byte[] content = newBlob.getContent();
-    ByteArrayResource resource = new ByteArrayResource(content);
+    ByteArrayResource resource = new ByteArrayResource(blob.getContent());
+
+//    HttpHeaders headers = new HttpHeaders();
+//    headers.setCacheControl(CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic().getHeaderValue());
+
 
     return ResponseEntity.ok()
             .contentType(MediaType.IMAGE_JPEG)
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
             .body(resource);
   }
+
+
+
+
 
 
 
