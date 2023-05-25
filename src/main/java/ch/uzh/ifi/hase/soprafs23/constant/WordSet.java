@@ -1,10 +1,8 @@
 package ch.uzh.ifi.hase.soprafs23.constant;
 
 import org.springframework.web.client.RestTemplate;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Random;
+
+import java.util.*;
 
 public class WordSet {
 
@@ -28,7 +26,7 @@ public class WordSet {
     /*randomly get a word set, but it's incomplete for now*/
     public static WordSet generate() {
         List<String> words = generateOnce();
-        while(words.size()<2){
+        while(words.size()<2 || Objects.equals(words.get(0), words.get(1))){
             words = generateOnce();
         }
         return new WordSet(words.get(0), words.get(1));
