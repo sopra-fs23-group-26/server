@@ -628,6 +628,75 @@ public class UserControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void getMyGlobalranking_success() throws Exception{
+        User user1 = new User();
+        user1.setId(1L);
+        user1.setUsername("user 1");
+        user1.setPassword("password");
+        user1.setScore(10);
+
+        User user2 = new User();
+        user2.setId(2L);
+        user2.setUsername("user 2");
+        user2.setPassword("password");
+        user2.setScore(12);
+
+        List<User> players = new ArrayList<>();
+
+        players.add(user1);
+        players.add(user2);
+
+        given(userService.getUserById(anyLong())).willReturn(user1);
+        given(userService.getUsers()).willReturn(players);
+
+        MockHttpServletRequestBuilder requestBuilder = get("/myglobalranking/1")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // Perform request and verify response
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk());
+    }
+
+
+    @Test
+    void getMyCommunityranking_success() throws Exception{
+        User user1 = new User();
+        user1.setId(1L);
+        user1.setUsername("user 1");
+        user1.setPassword("password");
+        user1.setScore(10);
+
+        User user2 = new User();
+        user2.setId(2L);
+        user2.setUsername("user 2");
+        user2.setPassword("password");
+        user2.setScore(20);
+
+        List<User> friends_1 = new ArrayList<>();
+        List<User> friends_2 = new ArrayList<>();
+
+        friends_1.add(user2);
+        friends_2.add(user1);
+
+        user1.setFriends(friends_1);
+        user2.setFriends(friends_2);
+
+        given(userService.getUserById(anyLong())).willReturn(user1);
+
+        MockHttpServletRequestBuilder requestBuilder = get("/mycommunityranking/1")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        // Perform request and verify response
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk());
+    }
+
+
+
+
+
+
     /**
      * Helper Method to convert userPostDTO into a JSON string such that the input
      * can be processed

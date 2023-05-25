@@ -23,6 +23,7 @@ import ch.uzh.ifi.hase.soprafs23.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -250,5 +251,22 @@ public class GameUnderCoverControllerTest {
                 .andExpect(jsonPath("$.id").value(gameUndercover.getId()));
 
         verify(roomService, times(1)).getRoomById(roomId);
+    }
+
+    @Test
+    void createGame_gameNotExist() throws Exception{
+        long roomId = 1L;
+        Room room = new Room();
+        room.setId(roomId);
+        GameUndercover gameUndercover = new GameUndercover();
+        room.setGameUndercover(null);
+        given(roomService.getRoomById(roomId)).willReturn(room);
+        given(ucService.createGame(ArgumentMatchers.any(Room.class))).willReturn(gameUndercover);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/undercover/rooms/{roomId}", roomId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(gameUndercover.getId()));
+        verify(roomService, times(1)).getRoomById(roomId);
+
     }
 }
