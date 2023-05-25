@@ -98,6 +98,7 @@ Potential improvements or extensions in the future may include:
 
 - create chat room for the platform
 - introduce more game based on our game platform
+- change the external API for generate the word set in the game undercover
 
 ## Authors & Acknowledement
 >Jiewen Luo, Ruirui Wang, Heqing Ren & Jiajian Zhu

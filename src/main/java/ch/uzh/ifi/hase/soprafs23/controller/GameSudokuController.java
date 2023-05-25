@@ -82,24 +82,17 @@ public class GameSudokuController {
     }
 
     public boolean isValidSudoku(String[][] board) {
-        // check each row
-        for (int row = 0; row < 9; row++) {
-            if (!isValidRow(board, row)) {
+        // Check each row and column
+        for (int i = 0; i < 9; i++) {
+            if (!isValidRow(board, i) || !isValidColumn(board, i)) {
                 return false;
             }
         }
 
-        // check each column
-        for (int col = 0; col < 9; col++) {
-            if (!isValidCol(board, col)) {
-                return false;
-            }
-        }
-
-        // check each 3x3 subgrid
-        for (int row = 0; row < 9; row += 3) {
-            for (int col = 0; col < 9; col += 3) {
-                if (!isValidSubgrid(board, row, col)) {
+        // Check each 3x3 subgrid
+        for (int i = 0; i < 9; i += 3) {
+            for (int j = 0; j < 9; j += 3) {
+                if (!isValidSubgrid(board, i, j)) {
                     return false;
                 }
             }
@@ -112,43 +105,42 @@ public class GameSudokuController {
         Set<String> set = new HashSet<>();
         for (int col = 0; col < 9; col++) {
             String num = board[row][col];
-            if (num.equals(".")) {
-                continue;
-            }
-            if (!set.add(num)) {
+            if (isValidNumber(num, set)) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean isValidCol(String[][] board, int col) {
+    private boolean isValidColumn(String[][] board, int col) {
         Set<String> set = new HashSet<>();
         for (int row = 0; row < 9; row++) {
             String num = board[row][col];
-            if (num.equals(".")) {
-                continue;
-            }
-            if (!set.add(num)) {
+            if (isValidNumber(num, set)) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean isValidSubgrid(String[][] board, int row, int col) {
+    private boolean isValidSubgrid(String[][] board, int startRow, int startCol) {
         Set<String> set = new HashSet<>();
-        for (int i = row; i < row + 3; i++) {
-            for (int j = col; j < col + 3; j++) {
-                String num = board[i][j];
-                if (num.equals(".")) {
-                    continue;
-                }
-                if (!set.add(num)) {
+        for (int row = startRow; row < startRow + 3; row++) {
+            for (int col = startCol; col < startCol + 3; col++) {
+                String num = board[row][col];
+                if (isValidNumber(num, set)) {
                     return false;
                 }
             }
         }
         return true;
     }
+
+    private boolean isValidNumber(String num, Set<String> set) {
+        if (num.equals("")) {
+            return true;  // Empty cell, not a valid number
+        }
+        return !set.add(num);  // Duplicate number found
+    }
+
 }
