@@ -146,38 +146,38 @@ public class GameUnderCoverControllerTest {
         verify(ucService, times(1)).voteAndCheckIfEnds(gameUndercover, votedUser);
     }
 
-    @Test
-    public void vote_gameEndsWithMostVotedUser_userRemovedAndGameStatusChanged() throws Exception {
-        // Setup
-        long gameId = 1L;
-        long voteUserId = 2L;
-        long votedUserId1 = 3L;
-        long votedUserId2 = 4L;
-        GameUndercover gameUndercover = new GameUndercover();
-        gameUndercover.setId(gameId);
-        gameUndercover.setGameStatus(GameStatus.voting);
-        User voteUser = new User();
-        voteUser.setId(voteUserId);
-        User votedUser1 = new User();
-        votedUser1.setId(votedUserId1);
-        User votedUser2 = new User();
-        votedUser2.setId(votedUserId2);
-
-// Set up room with players
-        long roomId = 1L;
-        Room room = new Room();
-        Set<User> players = new HashSet<>();
-        players.add(voteUser);
-        players.add(votedUser1);
-        players.add(votedUser2);
-        room.setPlayers(players);
-        room.setId(roomId);
-        gameUndercover.setRoom(room);
-
-// Set up list of out users
-        List<User> outUsers = new ArrayList<>();
-        outUsers.add(votedUser1);
-    }
+//    @Test
+//    public void vote_gameEndsWithMostVotedUser_userRemovedAndGameStatusChanged() throws Exception {
+//        // Setup
+//        long gameId = 1L;
+//        long voteUserId = 2L;
+//        long votedUserId1 = 3L;
+//        long votedUserId2 = 4L;
+//        GameUndercover gameUndercover = new GameUndercover();
+//        gameUndercover.setId(gameId);
+//        gameUndercover.setGameStatus(GameStatus.voting);
+//        User voteUser = new User();
+//        voteUser.setId(voteUserId);
+//        User votedUser1 = new User();
+//        votedUser1.setId(votedUserId1);
+//        User votedUser2 = new User();
+//        votedUser2.setId(votedUserId2);
+//
+//// Set up room with players
+//        long roomId = 1L;
+//        Room room = new Room();
+//        Set<User> players = new HashSet<>();
+//        players.add(voteUser);
+//        players.add(votedUser1);
+//        players.add(votedUser2);
+//        room.setPlayers(players);
+//        room.setId(roomId);
+//        gameUndercover.setRoom(room);
+//
+//// Set up list of out users
+//        List<User> outUsers = new ArrayList<>();
+//        outUsers.add(votedUser1);
+//    }
 
     @Test
     public void vote_voteUserAlreadyOut_throwsForbidden() throws Exception {

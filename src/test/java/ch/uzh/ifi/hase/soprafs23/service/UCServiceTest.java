@@ -148,76 +148,76 @@ class UCServiceTest {
         }
     }
 
-    @Test
-    public void testVoteIfGameContinues() {
-        // Create a new game with three players
-        GameUndercover game = new GameUndercover();
-        Room room = new Room();
-        Set<User> users = new HashSet<>();
-        User user1 = new User();
-        user1.setUsername("user1");
-        user1.setVoted(false);
-        user1.setUndercover(false);
-        user1.setWord("word1");
-        User user2 = new User();
-        user2.setUsername("user2");
-        user2.setVoted(false);
-        user2.setUndercover(true);// undercover
-        user2.setWord("word2");
-        User user3 = new User();
-        user3.setUsername("user3");
-        user3.setVoted(false);
-        user3.setUndercover(false);
-        user3.setWord("word3");
-        User user4 = new User();
-        user4.setVoted(false);
-        user4.setUndercover(false);
-        user4.setWord("word3");
-        users.add(user1);
-        users.add(user2);
-        users.add(user3);
-        users.add(user4);
-        room.setPlayers(users);
-        game.setGameStatus(GameStatus.describing);
-        game.setRoom(room);
-        room.setGameUndercover(game);
+//    @Test
+//    public void testVoteIfGameContinues() {
+//        // Create a new game with three players
+//        GameUndercover game = new GameUndercover();
+//        Room room = new Room();
+//        Set<User> users = new HashSet<>();
+//        User user1 = new User();
+//        user1.setUsername("user1");
+//        user1.setVoted(false);
+//        user1.setUndercover(false);
+//        user1.setWord("word1");
+//        User user2 = new User();
+//        user2.setUsername("user2");
+//        user2.setVoted(false);
+//        user2.setUndercover(true);// undercover
+//        user2.setWord("word2");
+//        User user3 = new User();
+//        user3.setUsername("user3");
+//        user3.setVoted(false);
+//        user3.setUndercover(false);
+//        user3.setWord("word3");
+//        User user4 = new User();
+//        user4.setVoted(false);
+//        user4.setUndercover(false);
+//        user4.setWord("word3");
+//        users.add(user1);
+//        users.add(user2);
+//        users.add(user3);
+//        users.add(user4);
+//        room.setPlayers(users);
+//        game.setGameStatus(GameStatus.describing);
+//        game.setRoom(room);
+//        room.setGameUndercover(game);
+//
+//        // Vote off one of the players
+//        List<User> votedUsers = new ArrayList<>();
+//        votedUsers.add(user1);
+//    }
 
-        // Vote off one of the players
-        List<User> votedUsers = new ArrayList<>();
-        votedUsers.add(user1);
-    }
-
-    @Test
-    void testDescribeRoundEnd() {
-        // create game with 3 players, current player is the second one
-        Set<User> users = new HashSet<>();
-        User user1 = new User();
-        user1.setUsername("user1");
-        user1.setVoted(false);
-        user1.setUndercover(false);
-        user1.setWord("word1");
-        User user2 = new User();
-        user2.setUsername("user2");
-        user2.setVoted(false);
-        user2.setUndercover(true);
-        user2.setWord("word2");
-        User user3 = new User();
-        user3.setUsername("user3");
-        user3.setVoted(false);
-        user3.setUndercover(false);
-        user3.setWord("word3");
-        User user4 = new User();
-        user4.setVoted(false);
-        user4.setUndercover(false);
-        user4.setWord("word3");
-        users.add(user1);
-        users.add(user2);
-        users.add(user3);
-        users.add(user4);
-        GameUndercover gameUndercover = new GameUndercover();
-        gameUndercover.setGameStatus(GameStatus.describing);
-        undercoverRepository.save(gameUndercover);
-    }
+//    @Test
+//    void testDescribeRoundEnd() {
+//        // create game with 3 players, current player is the second one
+//        Set<User> users = new HashSet<>();
+//        User user1 = new User();
+//        user1.setUsername("user1");
+//        user1.setVoted(false);
+//        user1.setUndercover(false);
+//        user1.setWord("word1");
+//        User user2 = new User();
+//        user2.setUsername("user2");
+//        user2.setVoted(false);
+//        user2.setUndercover(true);
+//        user2.setWord("word2");
+//        User user3 = new User();
+//        user3.setUsername("user3");
+//        user3.setVoted(false);
+//        user3.setUndercover(false);
+//        user3.setWord("word3");
+//        User user4 = new User();
+//        user4.setVoted(false);
+//        user4.setUndercover(false);
+//        user4.setWord("word3");
+//        users.add(user1);
+//        users.add(user2);
+//        users.add(user3);
+//        users.add(user4);
+//        GameUndercover gameUndercover = new GameUndercover();
+//        gameUndercover.setGameStatus(GameStatus.describing);
+//        undercoverRepository.save(gameUndercover);
+//    }
 
     @Test
     void testGameEndsSettingUndercoverWin(){
