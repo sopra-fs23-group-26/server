@@ -6,6 +6,7 @@
 
 ## Introduction
 The idea of our project is to provide a fun and engaging platform for users to enjoy playing games and socializing with their friends. Our game platformn currently contain 1 single-player game Sudoku and 1 multi-player game Who is undercover. On our platform, the user could add friends, view game history, upload their image and also see the ranking among all users.
+> If you need to login to multiple accounts at the same time, you should use different browswes(such as chrome, safari and firefox), or the privacy mode of safari.
 
 ## Technologies
 - Java 
